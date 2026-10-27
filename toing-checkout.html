@@ -1,0 +1,533 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+
+<html>
+    <head>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            :root {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+
+            * {
+                box-sizing: border-box;
+                -webkit-font-smoothing: inherit;
+            }
+
+            h1, h2, h3, h4, h5, h6, p, figure {
+                margin: 0;
+            }
+
+            body, input, textarea, select, button {
+                font-size: 12px;
+                font-family: sans-serif;
+            }
+        </style>
+    <style>@keyframes jhpulse{0%{box-shadow:0 0 0 0 rgba(255,79,200,.55)}70%{box-shadow:0 0 0 10px rgba(255,79,200,0)}100%{box-shadow:0 0 0 0 rgba(255,79,200,0)}}#splitSwitch{animation:jhpulse 1.8s ease-out infinite;border-radius:999px}.split{outline:2px solid #FF4FC8;outline-offset:-2px}</style></head>
+    <body>
+        <!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toing — Group checkout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #065420;
+    --green-tint: #F0F6F2;
+    --green-soft: #DCEDE1;
+    --pink: #FF4BD0;
+    --pink-ink: #C4129A;
+    --pink-deep: #9A0E79;
+    --pink-wash: #FFE6F7;
+    --ink: #1A1A1A;
+    --ink-2: #4A4A46;
+    --ink-3: #6B6B66;
+    --ground: #F3F4F0;
+    --line: #F1F1EC;
+    --off: #C9C9C2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    display: grid; place-items: center;
+    background: #E4E6E0;
+    font-family: Figtree, system-ui, sans-serif; color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  button:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+  h1, h2, p { margin: 0; }
+  [hidden] { display: none !important; }
+
+  /* Phone */
+  .phone {
+    width: 390px; height: 844px;
+    display: flex; flex-direction: column;
+    background: var(--ground);
+    border-radius: 40px; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,.18), 0 0 0 10px #1A1A1A;
+  }
+  @media (max-width: 440px) {
+    body { place-items: stretch; background: var(--ground); }
+    .phone { width: 100%; height: 100svh; border-radius: 0; box-shadow: none; }
+  }
+  .view { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+  /* Header */
+  .header {
+    flex-shrink: 0; background: var(--green); color: #fff;
+    padding: 12px 16px 22px; border-radius: 0 0 28px 28px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .header__bar { display: flex; align-items: center; justify-content: space-between; }
+  .header__bar h1 { font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+  .icon-btn {
+    width: 44px; height: 44px; border: 0; border-radius: 22px;
+    background: rgba(255,255,255,.12); color: #fff;
+    display: grid; place-items: center;
+  }
+  .spacer { width: 44px; height: 44px; }
+  .header__sum { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .header__group { display: block; font-size: 13px; font-weight: 500; color: #CFE6D6; margin-bottom: 6px; }
+  .header__total { font-size: 36px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+  .stack { display: flex; padding-left: 8px; }
+  .stack .avatar { width: 30px; height: 30px; margin-left: -8px; border: 2px solid var(--green); font-size: 11px; }
+
+  .avatar {
+    flex-shrink: 0; border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 700; color: var(--ink);
+  }
+
+  /* Body */
+  .body {
+    flex: 1; overflow-y: auto;
+    padding: 16px 16px 20px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .card { background: #fff; border-radius: 18px; padding: 16px; }
+  .card h2 { font-size: 16px; font-weight: 700; }
+  .muted { font-size: 13px; color: var(--ink-2); line-height: 1.4; }
+
+  /* Deliver */
+  .deliver { display: flex; gap: 12px; align-items: flex-start; }
+  .deliver__icon {
+    width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px;
+    background: var(--pink-wash); color: var(--pink-ink);
+    display: grid; place-items: center;
+  }
+  .deliver__text { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .eyebrow { font-size: 12px; font-weight: 500; color: var(--ink-3); }
+  .eta { margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--green); }
+  .link-btn {
+    border: 0; background: none; color: var(--pink-ink);
+    font-size: 14px; font-weight: 700; padding: 10px 4px; min-height: 44px;
+  }
+
+  /* Split */
+  .split { display: flex; flex-direction: column; gap: 12px; }
+  .split__head { display: flex; align-items: center; gap: 12px; }
+  .split__head > div { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .switch {
+    width: 52px; height: 32px; flex-shrink: 0;
+    border: 0; border-radius: 16px; padding: 3px;
+    background: var(--off); display: flex;
+    transition: background .2s;
+  }
+  .switch span {
+    width: 26px; height: 26px; border-radius: 13px; background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.25);
+    transition: transform .2s;
+  }
+  .switch[aria-checked="true"] { background: var(--green); }
+  .switch[aria-checked="true"] span { transform: translateX(20px); }
+
+  .members { list-style: none; margin: 0; padding: 0; border-top: 1px solid #EDEDE8; }
+  .member { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .member .avatar { width: 34px; height: 34px; font-size: 12px; }
+  .member__who { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .member__name { font-size: 14px; font-weight: 600; }
+  .member__dish { font-size: 12px; color: var(--ink-3); }
+  .member__amt { display: flex; flex-direction: column; align-items: flex-end; }
+  .member__amt strong { font-size: 15px; font-weight: 700; }
+  .member__amt small { font-size: 11px; font-weight: 600; color: var(--pink-deep); }
+  .member--host .member__amt small { color: var(--green); }
+  .note { padding: 12px; border-radius: 12px; background: var(--ground); font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+
+  /* Bill */
+  .bill { display: flex; flex-direction: column; gap: 10px; }
+  .row { display: flex; justify-content: space-between; font-size: 14px; color: var(--ink-2); }
+  .row--total { font-size: 16px; font-weight: 800; color: var(--ink); padding-top: 10px; border-top: 1px dashed #D9D9D3; }
+
+  /* Methods */
+  .methods { padding-bottom: 8px; display: flex; flex-direction: column; gap: 4px; }
+  .methods h2 { margin-bottom: 6px; }
+  .method {
+    display: flex; align-items: center; gap: 12px;
+    width: calc(100% + 20px); min-height: 56px;
+    margin: 0 -10px; padding: 8px 10px;
+    border: 0; border-radius: 12px; background: transparent; text-align: left;
+  }
+  .method[aria-checked="true"] { background: var(--green-tint); }
+  .method:disabled { opacity: .45; cursor: not-allowed; }
+  .method__icon {
+    width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px;
+    background: var(--green-tint); color: var(--green);
+    display: grid; place-items: center;
+  }
+  .method__text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .method__name { font-size: 14px; font-weight: 600; }
+  .method__sub { font-size: 12px; color: var(--ink-3); }
+  .radio {
+    width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%;
+    border: 2px solid var(--off); display: grid; place-items: center;
+  }
+  .radio::after { content: ""; width: 10px; height: 10px; border-radius: 50%; }
+  .method[aria-checked="true"] .radio { border-color: var(--green); }
+  .method[aria-checked="true"] .radio::after { background: var(--green); }
+
+  /* Pay bar */
+  .paybar {
+    flex-shrink: 0; background: #fff; border-top: 1px solid #E6E6E0;
+    padding: 12px 16px 20px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .paybar__caption { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); line-height: 1.4; }
+  .paybar__caption svg { flex-shrink: 0; }
+  .pay {
+    width: 100%; min-height: 54px; border: 0; border-radius: 999px;
+    background: var(--green); color: #fff; font-size: 16px; font-weight: 700;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 8px 0 24px;
+    transition: transform .12s;
+  }
+  .pay:active { transform: scale(.98); }
+  .pay__chip {
+    height: 40px; padding: 0 14px; border-radius: 999px;
+    background: var(--pink); color: var(--ink);
+    font-size: 13px; font-weight: 800;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  /* Placed */
+  .placed { padding: 56px 20px 20px; gap: 24px; overflow-y: auto; }
+  .placed__hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+  .tick {
+    width: 76px; height: 76px; border-radius: 50%;
+    background: var(--green); color: #fff;
+    display: grid; place-items: center;
+    box-shadow: 0 0 0 10px var(--green-soft);
+    animation: pop .4s cubic-bezier(.2,.9,.3,1.3);
+  }
+  @keyframes pop { from { transform: scale(.6); opacity: 0; } }
+  .placed__hero h1 { margin-top: 14px; font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+  .placed__hero p { font-size: 14px; color: var(--ink-2); line-height: 1.5; max-width: 280px; }
+  .status { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .status:last-child { border-bottom: 0; }
+  .status .avatar { width: 32px; height: 32px; font-size: 11px; }
+  .status__name { flex: 1; font-size: 14px; font-weight: 600; }
+  .status__amt { font-size: 14px; font-weight: 700; }
+  .pill { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 999px; }
+  .pill--paid { background: var(--green-soft); color: var(--green); }
+  .pill--req { background: var(--pink-wash); color: var(--pink-deep); }
+  .pill--cov { background: #EFEFEA; color: var(--ink-2); }
+  .placed__actions { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+  .ghost { width: 100%; min-height: 48px; border: 0; background: none; color: var(--green); font-size: 14px; font-weight: 700; }
+  .primary { justify-content: center; padding: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<main class="phone">
+
+  <!-- ============ CHECKOUT ============ -->
+  <div class="view" id="checkout">
+    <header class="header">
+      <div class="header__bar">
+        <button class="icon-btn" type="button" aria-label="Back to group cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h1>Checkout</h1>
+        <span class="spacer"></span>
+      </div>
+      <div class="header__sum">
+        <div>
+          <span class="header__group">Office lunch · 5 members</span>
+          <span class="header__total">₹935</span>
+        </div>
+        <div class="stack" id="avatarStack" role="img" aria-label="Members: You, Yogita, Aman, Riya, Kabir"></div>
+      </div>
+    </header>
+
+    <div class="body">
+      <!-- Deliver to -->
+      <section class="card deliver" aria-labelledby="deliver-h">
+        <span class="deliver__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+        </span>
+        <div class="deliver__text">
+          <span class="eyebrow">Deliver to</span>
+          <h2 id="deliver-h">Home</h2>
+          <span class="muted">12 Block, near HP Petrol Bunk, Baner, Pune 411008</span>
+          <span class="eta">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            Arriving in 30–35 min
+          </span>
+        </div>
+        <button class="link-btn" type="button">Change</button>
+      </section>
+
+      <!-- Split -->
+      <section class="card split" aria-labelledby="split-h">
+        <div class="split__head">
+          <div>
+            <h2 id="split-h">Split the bill</h2>
+            <span class="muted">Everyone pays for their own dishes plus ₹20 for delivery and fees.</span>
+          </div>
+          <button class="switch" id="splitSwitch" type="button" role="switch" aria-checked="true" aria-labelledby="split-h"><span></span></button>
+        </div>
+        <ul class="members" id="memberList"></ul>
+        <p class="note" id="noSplitNote" hidden>You'll pay the full ₹935. Nobody gets a payment request.</p>
+      </section>
+
+      <!-- Bill -->
+      <section class="card bill" aria-labelledby="bill-h">
+        <h2 id="bill-h">Bill details</h2>
+        <div class="row"><span>Item total · 5 dishes</span><span>₹835</span></div>
+        <div class="row"><span>Delivery fee</span><span>₹60</span></div>
+        <div class="row"><span>Taxes and platform fee</span><span>₹40</span></div>
+        <div class="row row--total"><span>To pay</span><span>₹935</span></div>
+      </section>
+
+      <!-- Payment method -->
+      <section class="card methods" aria-labelledby="pay-h">
+        <h2 id="pay-h">Pay with</h2>
+        <div role="radiogroup" aria-labelledby="pay-h" id="methodList"></div>
+      </section>
+    </div>
+
+    <!-- Pay bar -->
+    <div class="paybar">
+      <div class="paybar__caption">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#065420" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
+        <span id="caption"></span>
+      </div>
+      <button class="pay" id="payBtn" type="button">
+        <span id="payLabel"></span>
+        <span class="pay__chip"><span id="methodShort"></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ ORDER PLACED ============ -->
+  <div class="view placed" id="placed" hidden>
+    <div class="placed__hero">
+      <span class="tick">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+      </span>
+      <h1 id="placedTitle" tabindex="-1">Order placed</h1>
+      <p id="placedLine"></p>
+    </div>
+    <section class="card" aria-labelledby="status-h">
+      <h2 id="status-h" style="margin-bottom:6px"></h2>
+      <div id="statusList"></div>
+    </section>
+    <div class="placed__actions">
+      <button class="pay primary" type="button">Track order</button>
+      <button class="ghost" id="backBtn" type="button">Back to checkout</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+(() => {
+  const FEE_SHARE = 20;
+  const TOTAL = 935;
+
+  const people = [
+    { initials: 'JS', name: 'You',    dish: 'Classic Vadapav',      cost: 159, host: true, bg: '#FFD6F2' },
+    { initials: 'YG', name: 'Yogita', dish: 'Tandoori Paneer Pizza', cost: 189, bg: '#CDEBD6' },
+    { initials: 'AM', name: 'Aman',   dish: 'Kachori Combo',        cost: 159, bg: '#FFE7B8' },
+    { initials: 'RI', name: 'Riya',   dish: 'Veggie Supreme Pizza', cost: 150, bg: '#D9E4FF' },
+    { initials: 'KB', name: 'Kabir',  dish: 'Paneer Tikka Wrap',    cost: 178, bg: '#EADCFB' }
+  ];
+
+  const icons = {
+    upi:  '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M13 7l-3 5h4l-3 5"/>',
+    card: '<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/>',
+    cash: '<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9.5v5M18 9.5v5"/>'
+  };
+
+  const methods = [
+    { id: 'phonepe', name: 'PhonePe UPI',          sub: 'jeshmi@ybl',       short: 'UPI',  kind: 'upi' },
+    { id: 'gpay',    name: 'Google Pay UPI',       sub: 'jeshmi@okaxis',    short: 'UPI',  kind: 'upi' },
+    { id: 'card',    name: 'Credit or debit card', sub: 'Visa ending 4821', short: 'Card', kind: 'card' },
+    { id: 'cod',     name: 'Cash on delivery',     sub: '',                 short: 'Cash', kind: 'cash' }
+  ];
+
+  const state = { split: true, method: 'phonepe' };
+  const $ = id => document.getElementById(id);
+  const share = p => p.cost + FEE_SHARE;
+  const othersTotal = people.filter(p => !p.host).reduce((sum, p) => sum + share(p), 0);
+  const otherNames = people.filter(p => !p.host).map(p => p.name);
+  const nameList = otherNames.slice(0, -1).join(', ') + ' and ' + otherNames.at(-1);
+
+  // Static pieces
+  $('avatarStack').innerHTML = people.map(p =>
+    `<span class="avatar" style="background:${p.bg}">${p.initials}</span>`).join('');
+
+  $('memberList').innerHTML = people.map(p => `
+    <li class="member${p.host ? ' member--host' : ''}">
+      <span class="avatar" style="background:${p.bg}">${p.initials}</span>
+      <span class="member__who"><span class="member__name">${p.name}</span><span class="member__dish">${p.dish}</span></span>
+      <span class="member__amt"><strong>₹${share(p)}</strong><small>${p.host ? 'Host · pays now' : 'Gets a request'}</small></span>
+    </li>`).join('');
+
+  $('methodList').innerHTML = methods.map(m => `
+    <button class="method" type="button" role="radio" data-id="${m.id}" aria-checked="false">
+      <span class="method__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[m.kind]}</svg></span>
+      <span class="method__text"><span class="method__name">${m.name}</span><span class="method__sub">${m.sub}</span></span>
+      <span class="radio" aria-hidden="true"></span>
+    </button>`).join('');
+
+  const methodButtons = [...document.querySelectorAll('.method')];
+
+  function render() {
+    const { split } = state;
+    if (split && state.method === 'cod') state.method = 'phonepe';
+    const current = methods.find(m => m.id === state.method);
+    const cash = current.id === 'cod';
+
+    $('splitSwitch').setAttribute('aria-checked', String(split));
+    $('memberList').hidden = !split;
+    $('noSplitNote').hidden = split;
+
+    methodButtons.forEach(btn => {
+      const id = btn.dataset.id;
+      btn.setAttribute('aria-checked', String(id === state.method));
+      btn.tabIndex = id === state.method ? 0 : -1;
+      if (id === 'cod') {
+        btn.disabled = split;
+        btn.querySelector('.method__sub').textContent =
+          split ? 'Not available when splitting' : 'Pay cash or scan QR at the door';
+      }
+    });
+
+    $('methodShort').textContent = current.short;
+    $('payLabel').textContent = cash ? `Place order · ₹${TOTAL}` : (split ? `Pay ₹${TOTAL} and split` : `Pay ₹${TOTAL}`);
+    $('caption').textContent = split
+      ? `${nameList} get UPI requests for ₹${othersTotal} the moment you pay.`
+      : (cash ? `Pay ₹${TOTAL} to the delivery partner at your door.` : 'You cover the whole order. Nobody gets a request.');
+  }
+
+  function showPlaced() {
+    const { split } = state;
+    const current = methods.find(m => m.id === state.method);
+    const cash = current.id === 'cod';
+
+    $('placedLine').textContent = split
+      ? `You paid ₹${TOTAL} with ${current.name}. Payment requests for ₹${othersTotal} went to the group.`
+      : (cash ? `Keep ₹${TOTAL} ready for the delivery partner.` : `You paid ₹${TOTAL} with ${current.name} for the whole group.`);
+    $('status-h').textContent = split ? 'Who has paid' : 'Order paid by you';
+    $('statusList').innerHTML = people.map(p => {
+      const amt = p.host ? (split ? `₹${share(p)}` : `₹${TOTAL}`) : (split ? `₹${share(p)}` : '—');
+      const [label, cls] = p.host ? ['Paid', 'paid'] : (split ? ['Requested', 'req'] : ['Covered', 'cov']);
+      return `<div class="status">
+        <span class="avatar" style="background:${p.bg}">${p.initials}</span>
+        <span class="status__name">${p.name}</span>
+        <span class="status__amt">${amt}</span>
+        <span class="pill pill--${cls}">${label}</span>
+      </div>`;
+    }).join('');
+
+    $('checkout').hidden = true;
+    $('placed').hidden = false;
+    $('placedTitle').focus();
+  }
+
+  // Events
+  $('splitSwitch').addEventListener('click', () => { state.split = !state.split; render(); });
+
+  $('methodList').addEventListener('click', e => {
+    const btn = e.target.closest('.method');
+    if (!btn || btn.disabled) return;
+    state.method = btn.dataset.id;
+    render();
+  });
+
+  // Arrow keys move between payment options (radio group pattern)
+  $('methodList').addEventListener('keydown', e => {
+    if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+    e.preventDefault();
+    const enabled = methodButtons.filter(b => !b.disabled);
+    const i = enabled.findIndex(b => b.dataset.id === state.method);
+    const step = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : -1;
+    const next = enabled[(i + step + enabled.length) % enabled.length];
+    state.method = next.dataset.id;
+    render();
+    next.focus();
+  });
+
+  $('payBtn').addEventListener('click', showPlaced);
+  $('backBtn').addEventListener('click', () => {
+    $('placed').hidden = true;
+    $('checkout').hidden = false;
+    $('payBtn').focus();
+  });
+
+  render();
+})();
+</script>
+<script>(()=>{const send=()=>{const sw=document.getElementById('splitSwitch');const m=document.querySelector('.method[aria-checked=true]');parent.postMessage({toing:1,split:sw&&sw.getAttribute('aria-checked')==='true',method:m&&m.dataset.id},'*')};
+addEventListener('message',e=>{const d=e.data||{};if(!d.toingCmd)return;const sw=document.getElementById('splitSwitch');if('split' in d&&sw&&(sw.getAttribute('aria-checked')==='true')!==d.split)sw.click();if(d.method){const m=document.querySelector('.method[data-id='+d.method+']');if(m&&!m.disabled)m.click()}setTimeout(send,30)});
+document.addEventListener('click',()=>setTimeout(send,30));addEventListener('load',()=>setTimeout(send,50));})();</script></body>
+</html>
+
+        <script type="module">
+            let height = 0
+
+            function sendEmbedHeight() {
+                window.parent.postMessage({
+                    embedHeight: height
+                }, "*")
+            }
+
+            const observer = new ResizeObserver((entries) => {
+                if (entries.length !== 1) return
+                const entry = entries[0]
+                if (entry.target !== document.body) return
+
+                height = entry.contentRect.height
+                sendEmbedHeight()
+            })
+
+            observer.observe(document.body)
+
+            window.addEventListener("message", (event) => {
+                if (event.source !== window.parent) return
+                if (event.data !== "getEmbedHeight") return
+                sendEmbedHeight()
+            })
+        </script>
+    <body>
+</html>
