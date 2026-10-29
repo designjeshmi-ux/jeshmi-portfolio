@@ -224,7 +224,7 @@ table.cmp { width: 100%; border-collapse: collapse; min-width: 760px; font-size:
 .impact .row > div + div { padding-left: 28px; border-left: 1px solid rgba(246, 242, 236, .14); }
 .impact .big { color: #fff; font-size: clamp(44px, 5vw, 76px); }
 .impact .row b { display: block; margin-top: 10px; font-size: 17px; }
-.impact .row span { display: block; margin-top: 4px; font-size: 14.5px; color: rgba(246, 242, 236, .62); }
+.impact .row > div > span:not(.big) { display: block; margin-top: 4px; font-size: 14.5px; color: rgba(246, 242, 236, .62); }
 .impact .fine { margin-top: 32px; font-size: 13.5px; color: rgba(246, 242, 236, .55); }
 
 /* reflections */
