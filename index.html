@@ -128,7 +128,7 @@ h1, p { margin: 0; }
 .cf-list { position: relative; max-width: 1180px; margin: 0 auto; padding: 0; list-style: none; }
 .cf-item { position: sticky; top: calc(var(--cf-top) + var(--i) * var(--cf-step)); margin-bottom: 14vh; transform-origin: 50% 0; will-change: transform; }
 .cf-item:last-child { margin-bottom: 0; }
-.cf-tab { position: absolute; bottom: 100%; left: calc(var(--i) * 32.5%); width: 32%; height: 46px; padding: 0 20px; border: 0; border-radius: 16px 16px 0 0; background: var(--tint); display: flex; align-items: center; justify-content: space-between; gap: 10px; font: inherit; font-size: 13.5px; font-weight: 700; color: var(--ink); cursor: pointer; }
+.cf-tab { text-decoration: none; position: absolute; bottom: 100%; left: calc(var(--i) * 32.5%); width: 32%; height: 46px; padding: 0 20px; border: 0; border-radius: 16px 16px 0 0; background: var(--tint); display: flex; align-items: center; justify-content: space-between; gap: 10px; font: inherit; font-size: 13.5px; font-weight: 700; color: var(--ink); cursor: pointer; }
 .cf-tab span:last-child { font-weight: 600; color: var(--muted); }
 .cf-tab:hover span:first-child { color: var(--accent); }
 .cf-body { position: relative; min-height: min(70vh, 600px); border-radius: 0 24px 24px 24px; background: var(--tint); padding: clamp(20px, 2.6vw, 38px); display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(22px, 3vw, 48px); align-items: center; box-shadow: 0 -1px 0 rgba(255, 255, 255, .6) inset, 0 30px 60px -40px rgba(60, 30, 45, .45); }
@@ -433,7 +433,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
   </div>
   <ol class="cf-list" data-cf-list>
     <li class="cf-item" style="--i:0;--tint:#E4E9FF" data-cf-item>
-      <button class="cf-tab" type="button" data-cf-tab><span>Case file 01</span><span>B2B SaaS</span></button>
+      <a class="cf-tab" href="rp.html" data-cf-tab><span>Case file 01</span><span>B2B SaaS</span></a>
       <article class="cf-body">
         <figure class="cf-shot" style="margin:0"><svg class="cf-clip" viewBox="0 0 26 64" aria-hidden="true"><path d="M8 40 V10 a5 5 0 0 1 10 0 V48 a8 8 0 0 1 -16 0 V16" fill="none" stroke="#8C8A92" stroke-width="2.6" stroke-linecap="round"/></svg><img src="img/cover-r2-1600.webp" alt="RetailPilot, live: the decision inbox in a browser and on a phone, ranking stock decisions by rupees at stake." loading="lazy"></figure>
         <div class="cf-text">
@@ -446,7 +446,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
       </article>
     </li>
     <li class="cf-item" style="--i:1;--tint:#EEF2C4" data-cf-item>
-      <button class="cf-tab" type="button" data-cf-tab><span>Case file 02</span><span>AI products</span></button>
+      <a class="cf-tab" href="trip.html" data-cf-tab><span>Case file 02</span><span>AI products</span></a>
       <article class="cf-body">
         <figure class="cf-shot" style="margin:0"><svg class="cf-clip" viewBox="0 0 26 64" aria-hidden="true"><path d="M8 40 V10 a5 5 0 0 1 10 0 V48 a8 8 0 0 1 -16 0 V16" fill="none" stroke="#8C8A92" stroke-width="2.6" stroke-linecap="round"/></svg><img src="img/cover-ola-1600.webp" alt="Three phones showing EV trip verdicts and arrival battery." loading="lazy"></figure>
         <div class="cf-text">
@@ -459,7 +459,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
       </article>
     </li>
     <li class="cf-item" style="--i:2;--tint:#DCEAF7" data-cf-item>
-      <button class="cf-tab" type="button" data-cf-tab><span>Case file 03</span><span>Dev tools</span></button>
+      <a class="cf-tab" href="pulse.html" data-cf-tab><span>Case file 03</span><span>Dev tools</span></a>
       <article class="cf-body">
         <figure class="cf-shot" style="margin:0"><svg class="cf-clip" viewBox="0 0 26 64" aria-hidden="true"><path d="M8 40 V10 a5 5 0 0 1 10 0 V48 a8 8 0 0 1 -16 0 V16" fill="none" stroke="#8C8A92" stroke-width="2.6" stroke-linecap="round"/></svg><img src="img/cover-mk-1600.webp" alt="Pulse workspace listing iOS performance regressions by severity." loading="lazy"></figure>
         <div class="cf-text">
@@ -684,13 +684,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
     list.style.setProperty('--cf-step', (m ? 40 : 48) + 'px');
   }
   vars(); addEventListener('resize', vars);
-  // tabs jump to their folder; natural positions are measured with stickiness off
-  items.forEach((it, i) => it.querySelector('[data-cf-tab]').addEventListener('click', () => {
-    let y = list.getBoundingClientRect().top + scrollY;
-    for (let k = 0; k < i; k++) y += items[k].offsetHeight + parseFloat(getComputedStyle(items[k]).marginBottom);
-    const stick = parseFloat(getComputedStyle(items[i]).top);
-    scrollTo({ top: y - stick + 2, behavior: reduced ? 'auto' : 'smooth' });
-  }));
+  // tabs are links to their case study
   // each folder settles back a little as the next one lands on it
   function frame() {
     items.forEach((it, i) => {
