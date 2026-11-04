@@ -276,3 +276,39 @@ table.cmp { width: 100%; border-collapse: collapse; min-width: 760px; font-size:
   .pin::after { animation: none; }
   .pane.on { animation: none; }
 }
+
+/* ---------- storytelling: opening, problem threads, closing CTA ---------- */
+.story { margin-top: clamp(32px, 5vh, 52px); border-radius: 22px; overflow: hidden; background: var(--paper); border: 1px solid var(--line); }
+.story .cells { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.story .cells > div { padding: 22px 22px 24px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.story .cells > div + div { border-left: 1px solid var(--line); }
+.story dt { font-size: 11.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.story dd { margin: 0; font-size: 15.5px; line-height: 1.5; }
+.story .who dd { font-size: 17px; line-height: 1.45; color: var(--ink); }
+.story .win { background: var(--tint); }
+.story .win dt { color: var(--tint-ink); }
+.story .meta { display: flex; flex-wrap: wrap; gap: 6px 28px; padding: 14px 22px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.story .meta b { color: var(--ink); font-weight: 650; }
+.pain { scroll-margin-top: 90px; }
+.pain .lab b { display: inline-grid; place-items: center; min-width: 26px; height: 22px; padding: 0 6px; margin-right: 6px; border-radius: 6px; background: var(--ink); color: #fff; font-size: 11px; letter-spacing: .04em; }
+.solves { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 14px; font-size: 13px; font-weight: 650; color: var(--muted); }
+.solves a, .solves span.t { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); text-decoration: none; }
+.solves a b, .solves span.t b { font-size: 11px; padding: 1px 5px; border-radius: 4px; background: var(--ink); color: #fff; }
+.solves a:hover { border-color: var(--ink); }
+.loop { display: grid; gap: 10px; margin-top: 28px; }
+.loop div { display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1.2fr); gap: 12px; align-items: center; padding: 14px 18px; border-radius: 14px; background: rgba(246, 242, 236, .06); border: 1px solid rgba(246, 242, 236, .12); font-size: 15px; }
+.loop div span:first-child { color: rgba(246, 242, 236, .7); }
+.loop div span:nth-child(2) { color: rgba(246, 242, 236, .45); text-align: center; }
+.loop div b { color: #fff; }
+.cta-end { margin-top: clamp(80px, 12vh, 140px); padding: clamp(28px, 5vw, 56px); border-radius: 30px; background: var(--ink); color: #F6F2EC; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; align-items: end; }
+.cta-end h2 { font-size: clamp(30px, 3.6vw, 48px); font-weight: 750; letter-spacing: -.04em; line-height: 1.05; }
+.cta-end p { margin-top: 12px; color: rgba(246, 242, 236, .7); font-size: 16.5px; max-width: 40ch; }
+.cta-end .acts { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+.cta-end .acts a { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; font-weight: 700; font-size: 15px; text-decoration: none; white-space: nowrap; transition: transform .3s var(--ease), background .3s; }
+.cta-end .acts a.p { background: #F6F2EC; color: var(--ink); }
+.cta-end .acts a.s { border: 1.5px solid rgba(246, 242, 236, .35); color: #F6F2EC; }
+.cta-end .acts a:hover { transform: translateY(-2px); }
+.cta-end + .next { margin-top: 20px; }
+@media (max-width: 900px) { .story .cells { grid-template-columns: 1fr 1fr; } .story .cells > div:nth-child(3) { border-left: 0; } .story .cells > div:nth-child(n+3) { border-top: 1px solid var(--line); } .cta-end { grid-template-columns: 1fr; } .cta-end .acts { justify-content: flex-start; } }
+@media (max-width: 560px) { .story .cells { grid-template-columns: 1fr; } .story .cells > div + div { border-left: 0; border-top: 1px solid var(--line); } .loop div { grid-template-columns: 1fr; gap: 4px; } .loop div span:nth-child(2) { display: none; } }
+.dec > div:first-child > p.solves:not(.hmw):not(.to) { grid-column: 1; grid-row: 3; align-self: start; margin: 0; }
