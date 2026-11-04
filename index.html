@@ -384,6 +384,57 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
 .tl-sm{padding:16px 26px;background:#FBF8F3;border-style:dashed}.tl-sm h4{margin:0;font-size:18px;font-weight:700;letter-spacing:-.02em}.tl-sm .tl-body p{font-size:14.5px}
 @media(max-width:700px){.tl-i{grid-template-columns:1fr;gap:10px;padding:20px}}
 .q-tool{display:inline-flex;align-items:center;gap:8px;margin:2px 6px 0;padding:6px 10px 6px 6px;border-radius:999px;background:#F5F0EA;font-size:13px;font-weight:700;justify-self:start}.q-tool img{width:20px;height:20px;border-radius:5px}
+
+/* ---------- clean pass ---------- */
+.cf-clip, .cf-head .note, .jh-scroll { display: none !important; }
+.cf-shot, .cf-item:nth-child(2) .cf-shot { rotate: 0deg; padding: 10px; border-radius: 14px; box-shadow: 0 1px 0 rgba(0,0,0,.03), 0 18px 40px -28px rgba(60, 30, 45, .45); }
+.cf-shot img { border-radius: 8px; }
+.cf-body { min-height: 0; max-height: var(--cf-avail, none); box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 24px 50px -44px rgba(60, 30, 45, .5); }
+.cf-shot img { max-height: calc(var(--cf-avail, 9999px) - 90px); }
+.cf-list.flat .cf-body { max-height: none; }
+.cf-list.flat .cf-shot img { max-height: none; }
+.cf-item { margin-bottom: 18vh; }
+.sec-k { font-family: var(--sans); font-size: clamp(30px, 3vw, 44px); font-weight: 700; letter-spacing: -.035em; color: var(--ink); line-height: 1.05; }
+.tools { grid-template-columns: 1fr !important; }
+.nav { box-shadow: 0 10px 30px -18px rgba(60, 30, 45, .35); }
+.nav.hide { translate: -50% 0; }
+.nav a.cta { padding-inline: 16px; }
+/* contact */
+.ship-card { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: start; background: #17141C; box-shadow: 0 40px 80px -60px rgba(23, 20, 28, .7); }
+.ship-l { display: grid; gap: 22px; align-content: start; }
+.ship-k { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.7); }
+.ship-k i { width: 8px; height: 8px; border-radius: 50%; background: #6EE7A0; box-shadow: 0 0 0 4px rgba(110,231,160,.18); }
+.ship-card h2 { grid-column: auto; }
+.ship-card .lede { grid-column: auto; margin: 0; max-width: 30em; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.5; color: rgba(255,255,255,.72); }
+.ship-acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+.sbtn { display: inline-flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 22px; border-radius: 999px; border: 1px solid rgba(255,255,255,.28); color: #fff; font-weight: 700; font-size: 15px; text-decoration: none; transition: background .25s, color .25s, transform .3s cubic-bezier(.16,1,.3,1); }
+.sbtn:hover, .sbtn:focus-visible { background: rgba(255,255,255,.1); transform: translateY(-2px); }
+.sbtn--p { background: #fff; color: #17141C; border-color: #fff; }
+.sbtn--p:hover, .sbtn--p:focus-visible { background: #F49BC0; border-color: #F49BC0; color: #17141C; }
+.ship-r { margin: 0; display: grid; border-top: 1px solid rgba(255,255,255,.14); }
+.ship-r > div { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.14); }
+.ship-r dt { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.55); }
+.ship-r dd { margin: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: clamp(15px, 1.25vw, 17px); font-weight: 600; color: #fff; min-width: 0; }
+.ship-r a { color: #fff; text-decoration: none; overflow-wrap: anywhere; }
+.ship-r a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.cp { font: inherit; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.8); background: rgba(255,255,255,.1); border: 0; border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+.cp:hover { background: rgba(255,255,255,.2); }
+.endnote span:last-child { font-family: var(--sans); font-size: 13px; color: var(--muted); }
+@media (max-width: 860px) { .ship-card { grid-template-columns: 1fr; } }
+@media (max-width: 799px) {
+  .cf-item { margin-bottom: 12vh; }
+  .cf-body { padding: 16px; gap: 14px; }
+  .cf-shot { padding: 6px; }
+  .cf-shot img { aspect-ratio: 16 / 10; max-height: calc(var(--cf-avail, 9999px) - 250px); min-height: 150px; }
+  .cf-text h3 { font-size: 20px; }
+  .cf-meta { display: none; }
+  .cf-go { min-height: 42px; }
+  .ship-r > div { grid-template-columns: 1fr; gap: 4px; padding: 14px 0; }
+  .ship-r a { overflow-wrap: normal; }
+}
+.nav a.l { white-space: nowrap; }
+.cf-list:not(.flat) { padding-bottom: 22vh; }
+.cf-list:not(.flat) .cf-item:last-child { margin-bottom: 0; }
 </style>
 <canvas id="ribbon" aria-hidden="true"></canvas>
 <header class="nav">
@@ -392,7 +443,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
     <li><a class="l" href="#work">Work</a></li>
     <li><a class="l" href="#about">About</a></li>
     <li><a class="l" href="#explore">Side quests</a></li>
-    <li><a class="l cta" href="#contact" data-mag>Say hello</a></li>
+    <li><a class="l cta" href="mailto:design.jeshmi@gmail.com?subject=Hello%20Jeshmi" data-mag>Contact me</a></li>
   </ul></nav>
 </header>
 <div class="page">
@@ -431,14 +482,14 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
 
     <div class="jh-meta jh-meta--bot">
       <p class="jh-line">I design <b>B2B SaaS and AI products</b> that turn complex data into clear decisions.</p>
-      <span class="jh-end"><a class="jh-skip" href="#work" data-mag>Skip to work ↓</a><span class="jh-scroll" aria-hidden="true">or scroll to pack it up</span></span>
+      <span class="jh-end"><a class="jh-skip" href="#work" data-mag>Skip to work ↓</a></span>
     </div>
   </div>
 </section>
 <section class="cf" id="work" aria-labelledby="cf-h">
   <div class="cf-head">
     <h2 id="cf-h" data-split>Case files<span>.</span></h2>
-    <p>One shipped product, my IIT Hyderabad capstone, and two concepts. My client work is under NDA, so it’s summarised in <a href="#experience" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Where I’ve worked</a>.<span class="note" aria-hidden="true">they stack as you scroll ↓</span></p>
+    <p>One shipped product, my IIT Hyderabad capstone, and two concepts. My client work is under NDA, so it’s summarised in <a href="#experience" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Where I’ve worked</a>.</p>
   </div>
   <ol class="cf-list" data-cf-list>
     <li class="cf-item" style="--i:0;--tint:#E4E9FF" data-cf-item>
@@ -508,7 +559,6 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
       <ul class="dock" data-dock><li><button type="button" aria-pressed="true" aria-label="Figma" data-say="<b>Figma</b> · Where flows become screens."><img src="img/tool-figma.png" alt="" width="58" height="58"></button></li><li><button type="button" aria-pressed="false" aria-label="Framer" data-say="<b>Framer</b> · From design to a live site."><img src="img/tool-framer.png" alt="" width="58" height="58"></button></li><li><button type="button" aria-pressed="false" aria-label="Lovable" data-say="<b>Lovable</b> · Idea to a working prototype, fast."><img src="img/tool-lovable.png" alt="" width="58" height="58"></button></li><li><button type="button" aria-pressed="false" aria-label="Cursor" data-say="<b>Cursor</b> · Designing closer to the code."><img src="img/tool-cursor.png" alt="" width="58" height="58"></button></li><li><button type="button" aria-pressed="false" aria-label="Antigravity" data-say="<b>Antigravity</b> · Trying agent-first building."><img src="img/tool-antigravity.png" alt="" width="58" height="58"></button></li><li><button type="button" aria-pressed="false" aria-label="Claude" data-say="<b>Claude</b> · Thinking through messy problems."><img src="img/tool-claude.png" alt="" width="58" height="58"></button></li><li><button type="button" aria-pressed="false" aria-label="ChatGPT" data-say="<b>ChatGPT</b> · A sounding board for copy and edge cases."><img src="img/tool-chatgpt.png" alt="" width="58" height="58"></button></li></ul>
       <p class="tool-say" data-say-out aria-live="polite"><b>Figma</b> · Where flows become screens.</p>
     </div>
-    <div class="win" data-win aria-label="Sticky note: First win. Make it the shortest path." role="note"><strong>First win</strong><span>Make it the shortest path.</span></div>
   </div>
 </section>
 
@@ -542,28 +592,23 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
 
 <footer class="ship" id="contact" aria-labelledby="ship-h">
   <div class="ship-card">
-    <img class="clipart" src="img/clip.webp" alt="" aria-hidden="true">
-    <h2 id="ship-h" data-split>Let’s ship together.</h2>
-    <p class="lede">Got an idea worth building? Let’s make it happen.</p>
-    <div class="mini" data-mini tabindex="0" role="button" aria-label="Open the little box">
-      <div class="mini-box">
-        <div class="f mini-back"></div><div class="f mini-left"></div><div class="f mini-right"></div>
-        <div class="f mini-flap mini-flap--b"></div><div class="f mini-flap mini-flap--f"></div>
-        <div class="f mini-front"><b>THE UX PROCESS</b><em>handle with curiosity</em></div>
-      </div>
-      <span class="thanks" aria-hidden="true">Thanks!</span>
-    </div>
-    <div class="paper">
-      <p>That’s everything in the box. Thank you for unpacking it with me.</p>
-      <button class="mail" type="button" data-copy="design.jeshmi@gmail.com">design.jeshmi@gmail.com<small data-copy-label>Click to copy</small></button>
-      <div class="pills">
-        <a class="pill pill--dark" href="Jeshmi_Hamitkhani_Resume.pdf" target="_blank" rel="noopener">Resume →</a>
-        <a class="pill" href="https://www.linkedin.com/in/jeshmi-hamitkhani-3548a730b/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="pill" href="#explore">Side quests</a>
+    <div class="ship-l">
+      <span class="ship-k"><i aria-hidden="true"></i>Open to product design roles in Bengaluru</span>
+      <h2 id="ship-h" data-split>Let’s ship together.</h2>
+      <p class="lede">If you’re building B2B SaaS or AI products and need a designer who can also ship, I’d love to hear about it.</p>
+      <div class="ship-acts">
+        <a class="sbtn sbtn--p" href="mailto:design.jeshmi@gmail.com?subject=Hello%20Jeshmi">Email me <span aria-hidden="true">→</span></a>
+        <a class="sbtn" href="Jeshmi_Hamitkhani_Resume.pdf" target="_blank" rel="noopener">Download resume</a>
       </div>
     </div>
+    <dl class="ship-r">
+      <div><dt>Email</dt><dd><a href="mailto:design.jeshmi@gmail.com">design.jeshmi@gmail.com</a><button class="cp" type="button" data-copy="design.jeshmi@gmail.com"><span data-copy-label>Copy</span></button></dd></div>
+      <div><dt>Phone</dt><dd><a href="tel:+919035362675">+91 90353 62675</a></dd></div>
+      <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/jeshmi-hamitkhani-3548a730b/" target="_blank" rel="noopener">Jeshmi Hamitkhani ↗</a></dd></div>
+      <div><dt>Based in</dt><dd>Bengaluru, India</dd></div>
+    </dl>
   </div>
-  <div class="endnote"><span>© 2026 Jeshmi Hamitkhani</span><span>made with too many frames</span></div>
+  <div class="endnote"><span>© 2026 Jeshmi Hamitkhani</span><span>Designed and built by me</span></div>
 </footer>
 
 </div>
@@ -689,21 +734,20 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
   const items = [...list.querySelectorAll('[data-cf-item]')];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  function vars() {
-    const m = innerWidth < 800;
-    list.style.setProperty('--cf-top', (m ? 64 : Math.round(innerHeight * 0.13)) + 'px');
-    list.style.setProperty('--cf-step', (m ? 40 : 48) + 'px');
-  }
-  vars(); addEventListener('resize', vars);
   // tabs are links to their case study
   // each folder settles back a little as the next one lands on it
   // stack only when the tallest folder fits on screen with its tab and the next tab visible
   function fit() {
     list.classList.remove('flat');
-    const step = parseFloat(getComputedStyle(list).getPropertyValue('--cf-step')) || 48;
-    const top = parseFloat(getComputedStyle(list).getPropertyValue('--cf-top')) || 0;
+    const n = items.length, m = innerWidth < 800;
+    const top = m ? 76 : Math.max(84, Math.round(innerHeight * 0.11));
+    const step = m ? 36 : 46;
+    list.style.setProperty('--cf-top', top + 'px');
+    list.style.setProperty('--cf-step', step + 'px');
+    // every folder must fit under the tabs of the ones before it, so the stack reads like a file
+    list.style.setProperty('--cf-avail', (innerHeight - top - step * (n - 1) - 20) + 'px');
     const tallest = Math.max(...items.map((it) => it.querySelector('.cf-body').offsetHeight));
-    if (innerWidth <= 1100 || top + tallest + step * items.length + 24 > innerHeight) list.classList.add('flat');
+    if (innerHeight < 520 || top + tallest + step * (n - 1) + 8 > innerHeight) list.classList.add('flat');
   }
   fit(); addEventListener('resize', fit);
   function frame() {
@@ -819,7 +863,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
     // confetti dots in the hero
     let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
     const cols = ['#F06A9E', '#FCD34D', '#60A5FA', '#86D99B', '#9B2F66', '#F49BC0'];
-    dots = Array.from({ length: W < 800 ? 22 : 40 }, (_, i) => ({ x: rnd() * W, y: rnd() * H * 0.95, r: 2.5 + rnd() * 4, c: cols[i % cols.length], vx: 0, vy: 0, ph: rnd() * 6.28, z: 0.4 + rnd() * 0.8 }));
+    dots = Array.from({ length: 0 }, (_, i) => ({ x: rnd() * W, y: rnd() * H * 0.95, r: 2.5 + rnd() * 4, c: cols[i % cols.length], vx: 0, vy: 0, ph: rnd() * 6.28, z: 0.4 + rnd() * 0.8 }));
   }
 
   let shown = 0, last = 0;
@@ -856,7 +900,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
     const RW = W < 800 ? 44 : 96;
     const off = sy * depth;
     let prev = null;
-    ctx.globalAlpha = W < 800 ? 0.5 + 0.4 * clamp(1 - sy / H, 0, 1) : 1;
+    ctx.globalAlpha = (W < 800 ? 0.6 : 1) * clamp(1 - sy / (H * 0.85), 0, 1);
     for (let i = 0; i < path.length - 1; i++) {
       if (maxY[i] > shown || lens[i] > arc) break;
       const [x0, y0] = path[i], [x1, y1] = path[i + 1];
@@ -902,9 +946,8 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
   build();
   requestAnimationFrame(frame);
 
-  // nav hides on the way down, returns on the way up
   const nav = document.querySelector('.nav'); let ly = scrollY;
-  addEventListener('scroll', () => { const y = scrollY; if (Math.abs(y - ly) > 6) { nav.classList.toggle('hide', y > ly && y > 200); ly = y; } }, { passive: true });
+  // nav stays put so Contact me is always one tap away
 
   // dock magnifies around the pointer
   const dock = document.querySelector('[data-dock]'), tbtns = [...dock.querySelectorAll('button')], sayOut = document.querySelector('[data-say-out]');
@@ -913,14 +956,6 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
   const pick = (b) => { tbtns.forEach((x) => x.setAttribute('aria-pressed', x === b)); sayOut.innerHTML = b.dataset.say; };
   tbtns.forEach((b) => { b.addEventListener('mouseenter', () => pick(b)); b.addEventListener('focus', () => pick(b)); b.addEventListener('click', () => pick(b)); });
 
-  // the "First win" note can be peeled and dragged; it swings back
-  const win = document.querySelector('[data-win]');
-  let wd = null, wx = 0, wy = 0, wr = 4, wv = 0;
-  win.addEventListener('pointerdown', (e) => { win.setPointerCapture(e.pointerId); wd = { x: e.clientX - wx, y: e.clientY - wy }; win.style.cursor = 'grabbing'; });
-  win.addEventListener('pointermove', (e) => { if (!wd) return; const nx = e.clientX - wd.x; wv += (nx - wx) * 0.02; wx = nx; wy = e.clientY - wd.y; });
-  const wup = () => { wd = null; win.style.cursor = ''; };
-  win.addEventListener('pointerup', wup); win.addEventListener('pointercancel', wup);
-  (function wl() { if (!wd) { wx *= 0.88; wy *= 0.88; } wv += (4 - wr) * 0.06 - (reduced ? 0 : 0); wv *= 0.86; wr += wv; win.style.transform = `translate(${wx}px, ${wy}px) rotate(${wr - 4}deg)`; requestAnimationFrame(wl); })();
 
   // side quest cards tilt toward the pointer
   document.querySelectorAll('[data-tilt]').forEach((c) => {
@@ -928,26 +963,13 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
     c.addEventListener('pointerleave', () => { c.style.transform = ''; });
   });
 
-  // little box in the contact card opens on tap too
-  const mini = document.querySelector('[data-mini]');
-  const tm = () => mini.classList.toggle('open');
-  mini.addEventListener('click', tm); mini.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tm(); } });
 
   // copy email with a burst of paper bits
   document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
     const lab = b.querySelector('[data-copy-label]');
-    try { await navigator.clipboard.writeText(b.dataset.copy); lab.textContent = 'Copied. Talk soon!'; }
+    try { await navigator.clipboard.writeText(b.dataset.copy); lab.textContent = 'Copied'; }
     catch (e) { const r = document.createRange(); r.selectNodeContents(b.firstChild.parentNode); getSelection().removeAllRanges(); getSelection().addRange(r); lab.textContent = 'Selected, press Ctrl+C'; }
-    setTimeout(() => (lab.textContent = 'Click to copy'), 2400);
-    if (reduced) return;
-    const r = b.getBoundingClientRect();
-    for (let i = 0; i < 18; i++) {
-      const d = document.createElement('i'); d.className = 'bit';
-      d.style.background = ['#9B2F66', '#FCE77D', '#A9D8F5', '#F49BC0'][i % 4];
-      d.style.left = r.left + r.width * 0.4 + 'px'; d.style.top = r.top + 'px'; document.body.appendChild(d);
-      const a = -Math.PI / 2 + (Math.random() - 0.5) * 2, v = 80 + Math.random() * 110;
-      d.animate([{ transform: 'translate(0,0) rotate(0)', opacity: 1 }, { transform: `translate(${Math.cos(a) * v}px, ${Math.sin(a) * v + 140}px) rotate(${Math.random() * 600}deg)`, opacity: 0 }], { duration: 1200 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.4,1)' }).onfinish = () => d.remove();
-    }
+    setTimeout(() => (lab.textContent = 'Copy'), 2000);
   }));
 })();
 </script>
