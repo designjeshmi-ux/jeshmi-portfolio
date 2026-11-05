@@ -435,6 +435,9 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
 .nav a.l { white-space: nowrap; }
 .cf-list:not(.flat) { padding-bottom: 22vh; }
 .cf-list:not(.flat) .cf-item:last-child { margin-bottom: 0; }
+.cf-vid { position: absolute; left: 10px; top: 10px; width: calc(100% - 20px); height: calc(100% - 20px); object-fit: cover; object-position: top center; border-radius: 8px; opacity: 0; transition: opacity .6s; pointer-events: none; }
+.cf-vid.on { opacity: 1; }
+@media (max-width: 799px) { .cf-vid { left: 6px; top: 6px; width: calc(100% - 12px); height: calc(100% - 12px); } }
 </style>
 <canvas id="ribbon" aria-hidden="true"></canvas>
 <header class="nav">
@@ -508,7 +511,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
     <li class="cf-item" style="--i:1;--tint:#EEF2C4" data-cf-item>
       <a class="cf-tab" href="trip.html" data-cf-tab><span>Case file 02</span><span>AI products</span></a>
       <article class="cf-body">
-        <figure class="cf-shot" style="margin:0"><svg class="cf-clip" viewBox="0 0 26 64" aria-hidden="true"><path d="M8 40 V10 a5 5 0 0 1 10 0 V48 a8 8 0 0 1 -16 0 V16" fill="none" stroke="#8C8A92" stroke-width="2.6" stroke-linecap="round"/></svg><img src="img/cover-ola-1600.webp" alt="Three phones showing EV trip verdicts and arrival battery." loading="lazy"></figure>
+        <figure class="cf-shot" style="margin:0"><svg class="cf-clip" viewBox="0 0 26 64" aria-hidden="true"><path d="M8 40 V10 a5 5 0 0 1 10 0 V48 a8 8 0 0 1 -16 0 V16" fill="none" stroke="#8C8A92" stroke-width="2.6" stroke-linecap="round"/></svg><img src="img/cover-ola-motion-poster.webp" srcset="img/cover-ola-motion-poster-800.webp 800w, img/cover-ola-motion-poster.webp 1600w" sizes="(max-width: 800px) 92vw, 640px" alt="Trip Confidence in motion: a rider searches Electronic City, gets a tight-trip verdict, picks Eco mode, and the plan appears on the scooter dashboard." loading="lazy"><video class="cf-vid" data-vid data-src="img/cover-ola-motion.mp4" data-src-m="img/cover-ola-motion-m.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></figure>
         <div class="cf-text">
           <span class="cf-tag">Trip Confidence</span>
           <h3>Redesigning the EV journey around one question: “Can I make this trip confidently?”</h3>
@@ -1025,5 +1028,19 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
       el.addEventListener('pointerleave', () => { el.style.translate = ''; });
     });
   }
+})();
+</script>
+<script>
+(() => {
+  // case cards that move: load only when near the screen, play only while visible, never with reduced motion
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target;
+    if (e.isIntersecting) {
+      if (!v.src) { const s = innerWidth < 800 ? v.dataset.srcM : v.dataset.src; v.src = v.canPlayType('video/mp4; codecs="avc1.42E01E"') ? s : s.replace('.mp4', '.webm'); v.addEventListener('playing', () => v.classList.add('on'), { once: true }); }
+      v.play().catch(() => {});
+    } else v.pause();
+  }), { threshold: 0.25 });
+  document.querySelectorAll('[data-vid]').forEach((v) => io.observe(v));
 })();
 </script>
