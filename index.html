@@ -438,6 +438,11 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
 .cf-vid { position: absolute; left: 10px; top: 10px; width: calc(100% - 20px); height: calc(100% - 20px); object-fit: cover; object-position: top center; border-radius: 8px; opacity: 0; transition: opacity .6s; pointer-events: none; }
 .cf-vid.on { opacity: 1; }
 @media (max-width: 799px) { .cf-vid { left: 6px; top: 6px; width: calc(100% - 12px); height: calc(100% - 12px); } }
+
+/* ---------- pixel meadow: the page ends in bloom ---------- */
+.meadow { width: 100vw; margin-left: calc(50% - 50vw); margin-top: 8px; }
+.meadow canvas { display: block; width: 100%; height: clamp(170px, 23vh, 250px); }
+@media (max-width: 700px) { .meadow canvas { height: 150px; } }
 </style>
 <canvas id="ribbon" aria-hidden="true"></canvas>
 <header class="nav">
@@ -611,6 +616,7 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
     </dl>
   </div>
   <div class="endnote"><span>© 2026 Jeshmi Hamitkhani</span><span>Designed and built by me</span></div>
+  <div class="meadow"><canvas id="meadowC" aria-hidden="true"></canvas></div>
 </footer>
 
 </div>
@@ -1042,5 +1048,116 @@ body { background-image: linear-gradient(var(--grid) 1px, transparent 1px), line
     } else v.pause();
   }), { threshold: 0.25 });
   document.querySelectorAll('[data-vid]').forEach((v) => io.observe(v));
+})();
+</script>
+<script>
+/* pixel meadow — seeded, so it draws the same field on every visit */
+(() => {
+  const cv = document.getElementById('meadowC'); if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const mul = a => () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const noise = r => { const p = Array.from({ length: 512 }, r);
+    return x => { const i = Math.floor(x), f = x - i, s = f * f * (3 - 2 * f);
+      return p[i & 511] * (1 - s) + p[(i + 1) & 511] * s; }; };
+  const fbm = (n, x, o) => { let v = 0, a = .5, f = 1, s = 0;
+    for (let i = 0; i < o; i++) { v += n(x * f) * a; s += a; a *= .5; f *= 2; } return v / s; };
+  const hx = c => [1, 3, 5].map(i => parseInt(c.substr(i, 2), 16));
+  const mix = (c1, c2, t) => { const [a, b, c] = hx(c1), [d, e, f] = hx(c2);
+    return `rgb(${Math.round(a + (d - a) * t)},${Math.round(b + (e - b) * t)},${Math.round(c + (f - c) * t)})`; };
+
+  const SEED = 318, PX = 6;
+  const G = ['#D3E6BC', '#4C7A33'];
+  const PETAL = ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FDF6E6', '#F49BC0', '#F9C9DD', '#F6C945'];
+  const CENTRE = ['#F6C945', '#F6C945', '#FBD76B', '#9B2F66'];
+
+  let cols, rows, W, H, flowers = [];
+  const P = (x, y, c) => { if (x < 0 || x >= cols || y < 0 || y >= rows) return;
+    ctx.fillStyle = c; ctx.fillRect(x * PX, y * PX, PX - 1, PX - 1); };
+
+  function build() {
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    W = cv.clientWidth; H = cv.clientHeight;
+    if (!W || !H) return false;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    cols = Math.ceil(W / PX); rows = Math.ceil(H / PX);
+    flowers = [];
+    const LN = 5;
+    for (let L = 0; L < LN; L++) {
+      const d = L / (LN - 1);                       /* 0 = horizon, 1 = at your feet */
+      const r = mul(SEED + L * 101), n = noise(mul(SEED + L * 57));
+      const amp = rows * (0.05 + d * 0.09), base = rows * (0.20 + d * 0.34);
+      const tops = [];
+      for (let cx = 0; cx < cols; cx++) {
+        const h = Math.round(fbm(n, (cx + L * 19) / 13, 3) * amp);
+        const top = Math.max(0, Math.round(base - h));
+        tops.push(top);
+        for (let cy = top; cy < rows; cy++) {
+          const k = (cy - top) / Math.max(1, rows - top);
+          /* dissolve the far horizon into the page instead of cutting a hard line */
+          if (L === 0) { const e = cy - top; if (e < 5 && r() > (e + 1) / 6) continue; }
+          P(cx, cy, mix(G[0], G[1], Math.min(1, 0.12 + d * 0.34 + k * 0.75)));
+        }
+      }
+      const size = d < 0.3 ? 1 : d < 0.66 ? 2 : 3;
+      const nf = Math.round(cols * 0.72 * (0.45 + d));
+      for (let i = 0; i < nf; i++) {
+        const cx = Math.floor(r() * cols), top = tops[cx];
+        const cy = top + Math.floor(r() * Math.max(2, Math.round((rows - top) * 0.5)));
+        flowers.push({ cx, cy, size, d,
+          pc: PETAL[Math.floor(r() * PETAL.length)],
+          cc: CENTRE[Math.floor(r() * CENTRE.length)],
+          stem: mix(G[0], G[1], Math.min(1, 0.55 + d * 0.3)), st: 1 + Math.floor(r() * 3) });
+      }
+    }
+    /* a few big blooms right at the front, the way a real field reads */
+    const rb = mul(SEED * 13 + 7);
+    const nb = Math.max(5, Math.round(cols / 26));
+    for (let i = 0; i < nb; i++) {
+      flowers.push({ cx: Math.floor(rb() * cols), cy: Math.round(rows * (0.72 + rb() * 0.2)),
+        size: 4, d: 1, pc: rb() > 0.26 ? '#FFFFFF' : '#F49BC0',
+        cc: rb() > 0.3 ? '#F6C945' : '#9B2F66', stem: mix(G[0], G[1], 0.92), st: 2 + Math.floor(rb() * 3) });
+    }
+    flowers.sort((a, b) => a.d - b.d);
+    return true;
+  }
+
+  function paint(n) {
+    for (let i = 0; i < n && i < flowers.length; i++) {
+      const f = flowers[i];
+      if (f.size === 1) { P(f.cx, f.cy, f.pc); continue; }
+      if (f.size === 2) {
+        P(f.cx, f.cy - 1, f.pc); P(f.cx - 1, f.cy, f.pc); P(f.cx + 1, f.cy, f.pc);
+        P(f.cx, f.cy + 1, f.pc); P(f.cx, f.cy, f.cc); P(f.cx, f.cy + 2, f.stem); continue;
+      }
+      if (f.size === 3) {
+        for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) if (a || b) P(f.cx + a, f.cy + b, f.pc);
+        P(f.cx, f.cy, f.cc);
+        for (let s = 2; s < 2 + f.st; s++) P(f.cx, f.cy + s, f.stem); continue;
+      }
+      [[0,-2],[-1,-1],[0,-1],[1,-1],[-2,0],[-1,0],[1,0],[2,0],[-1,1],[0,1],[1,1],[0,2]]
+        .forEach(([a, b]) => P(f.cx + a, f.cy + b, f.pc));
+      P(f.cx, f.cy, f.cc);
+      for (let s = 3; s < 3 + f.st; s++) P(f.cx, f.cy + s, f.stem);
+    }
+  }
+
+  let drawn = false;
+  function run() {
+    if (drawn || !build()) return;
+    drawn = true;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { paint(flowers.length); return; }
+    const t0 = performance.now(), DUR = 1500;
+    const step = now => { const p = Math.min(1, (now - t0) / DUR);
+      paint(Math.round(flowers.length * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+  new IntersectionObserver((es, ob) => es.forEach(e => {
+    if (e.isIntersecting) { run(); ob.disconnect(); }
+  }), { threshold: 0.15 }).observe(cv);
+  let rt; addEventListener('resize', () => { clearTimeout(rt);
+    rt = setTimeout(() => { if (drawn) { build(); paint(flowers.length); } }, 180); });
 })();
 </script>
