@@ -162,11 +162,21 @@ section{padding:var(--s8) 0 0}
 .nda dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
 .nda dd{font-size:13.5px;margin-top:4px;line-height:1.45}
 .nda dd b{color:var(--grn);font-weight:600}
-.tools{display:flex;flex-wrap:wrap;gap:var(--s1);padding-top:var(--s5)}
+.toolhead{padding-top:var(--s6);font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint)}
+.tools{position:relative;display:flex;flex-wrap:wrap;gap:var(--s1);padding-top:var(--s2)}
 .tools span{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--hair);border-radius:99px;
-  padding:6px 13px 6px 8px;font-size:13px;color:var(--mid)}
-.tools img{width:16px;height:16px;border-radius:3px;display:block}
-.tools b{color:var(--ink);font-weight:500}
+  padding:7px 14px 7px 9px;font-size:13.5px;color:var(--ink);
+  transition:border-color .4s,background .4s,transform .5s cubic-bezier(.16,1,.3,1)}
+.tools img{width:16px;height:16px;border-radius:3px;display:block;flex:none}
+/* the note stays folded away until the bee calls, so the row reads as a list of names */
+.tools b{display:inline-block;max-width:0;opacity:0;overflow:hidden;white-space:nowrap;
+  color:var(--mid);font-weight:400;
+  transition:max-width .55s cubic-bezier(.16,1,.3,1),opacity .4s ease}
+.tools span.on b,.tools span:hover b{max-width:240px;opacity:1}
+.tools span.on,.tools span:hover{border-color:#E0A818;background:rgba(224,168,24,.08)}
+.tools span.on{transform:translateY(-2px)}
+canvas.beeC{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
 
 /* ── contact ── */
 .end{padding:var(--s8) var(--gut) 0}
@@ -347,7 +357,9 @@ canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
       <div><h3>Graphic designer</h3>
       <p>Brand identities, landing pages and digital assets for small businesses.</p></div></li>
   </ul>
+  <p class="toolhead rv">Tools I reach for</p>
   <div class="tools rv">
+    <canvas class="beeC" id="beeC" aria-hidden="true"></canvas>
     <span><img src="img/tool-figma.png" alt="">Figma <b>&nbsp;flows into screens</b></span>
     <span><img src="img/tool-framer.png" alt="">Framer <b>&nbsp;design to live site</b></span>
     <span><img src="img/tool-lovable.png" alt="">Lovable <b>&nbsp;fast prototypes</b></span>
@@ -744,6 +756,55 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
   }),{threshold:.3});
   document.querySelectorAll('[data-vid]').forEach(v=>io.observe(v));
 }
+
+/* ═══ the bee that does the rounds of the tools ═══
+   It is the same pixel bee from the meadow. It flies to a tool, hovers
+   there while that tool unfolds what it is for, then moves on. ═══ */
+(function(){
+  const cv=document.getElementById('beeC'); if(!cv) return;
+  const row=cv.parentElement, chips=[...row.querySelectorAll('span')];
+  if(!chips.length) return;
+  const ctx=cv.getContext('2d'), PX=4;
+  const S=[['.W.....W.','WWYKYKYWW','.YKYKYKY.','..KYKYK..','...KKK...'],
+           ['..W...W..','.WYKYKYW.','.YKYKYKY.','..KYKYK..','...KKK...']];
+  const PAL={Y:'#F3C53F',K:'#201F1C',W:'rgba(255,255,255,.72)'};
+  let W,H,x=0,y=0,tx=0,ty=0,fr=0,lf=0,at=-1,until=0,raf=0,live=false;
+  function size(){
+    const d=Math.min(2,devicePixelRatio||1);
+    W=cv.clientWidth;H=cv.clientHeight;if(!W||!H)return false;
+    cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);return true}
+  function spot(i){
+    const r=row.getBoundingClientRect(), c=chips[i].getBoundingClientRect();
+    return {x:c.left-r.left+c.width/2-18, y:c.top-r.top-22}}
+  function pick(now){
+    let n=Math.floor(Math.random()*chips.length);
+    if(n===at)n=(n+1)%chips.length;
+    if(at>=0)chips[at].classList.remove('on');
+    at=n;const p=spot(at);tx=p.x;ty=p.y;until=now+2600}
+  function frame(now){
+    if(now>until)pick(now);
+    const dx=tx-x,dy=ty-y,d=Math.hypot(dx,dy);
+    x+=dx*.045;y+=dy*.045+Math.sin(now/260)*.22;
+    if(d<16)chips[at].classList.add('on');
+    if(now-lf>70){fr^=1;lf=now}
+    ctx.clearRect(0,0,W,H);
+    const g=S[fr],flip=dx<-1;
+    for(let r2=0;r2<g.length;r2++)for(let c2=0;c2<g[r2].length;c2++){
+      const ch=g[r2][c2];if(ch==='.')continue;
+      const cx=flip?g[r2].length-1-c2:c2;
+      ctx.fillStyle=PAL[ch];ctx.fillRect(Math.round(x)+cx*PX,Math.round(y)+r2*PX,PX,PX)}
+    raf=requestAnimationFrame(frame)}
+  function start(){
+    if(live||!size())return;live=true;
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+      chips[0].classList.add('on');return}
+    const p=spot(0);x=p.x;y=p.y;at=0;until=0;raf=requestAnimationFrame(frame)}
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(live)size()},200)});
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting)start();
+    else if(raf){cancelAnimationFrame(raf);raf=0;live=false;if(at>=0)chips[at].classList.remove('on')}
+  }),{threshold:.2}).observe(row);
+})();
 
 /* ═══ the small residents — a butterfly, a bee, a couple of ladybirds ═══
    They live on their own overlay canvas so the landscape underneath never
