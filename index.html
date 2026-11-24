@@ -75,8 +75,15 @@ h1 span>i{display:block;font-style:normal;transform:translateY(108%);
 .open{display:inline-flex;align-items:center;gap:9px;margin-top:22px;font-size:13.5px;color:var(--mid)}
 .open i{width:7px;height:7px;border-radius:50%;background:var(--grn-l);
   box-shadow:0 0 0 4px color-mix(in srgb,var(--grn-l) 20%,transparent)}
-.field{margin-top:clamp(52px,9vh,96px);width:100vw;margin-left:calc(50% - 50vw)}
-.field canvas{display:block;width:100%;height:clamp(120px,19vh,190px)}
+.field{margin-top:var(--s6);margin-bottom:var(--s4);width:100vw;margin-left:calc(50% - 50vw);position:relative}
+.field canvas{display:block;width:100%;height:clamp(104px,15vh,158px);cursor:crosshair;outline:none}
+.field canvas:focus-visible{outline:2px solid var(--grn);outline-offset:-3px}
+.field::after{content:"";position:absolute;inset:0 0 auto;height:42%;z-index:3;pointer-events:none;
+  background:linear-gradient(180deg,var(--bg),transparent)}
+.fcap{position:absolute;right:var(--gut);bottom:9px;z-index:4;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.09em;text-transform:uppercase;color:#2B3327;background:rgba(255,255,255,.76);
+  border-radius:99px;padding:4px 10px;pointer-events:none}
+@media (max-width:760px){.fcap{display:none}}
 
 /* ── sections ── */
 section{padding:var(--s8) 0 0}
@@ -127,9 +134,7 @@ section{padding:var(--s8) 0 0}
 .me p b{color:var(--ink);font-weight:500}
 /* the portrait, built from the same grid as the landscape */
 .port{position:sticky;top:96px}
-.port canvas{display:block;width:100%;cursor:crosshair}
-.port figcaption{margin-top:var(--s2);font-family:var(--mono);font-size:10.5px;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--faint);line-height:1.7}
+.port img{display:block;width:100%;height:auto;border-radius:3px}
 @media (max-width:860px){.me{grid-template-columns:1fr}.port{position:static;max-width:260px}}
 
 /* ── path ── */
@@ -191,8 +196,8 @@ section{padding:var(--s8) 0 0}
 .field{position:relative}
 canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;cursor:default}
 /* over the hero strip they get the white air above the field to fly in */
-.field canvas.bugs{top:-150px;height:calc(100% + 150px)}
-@media (max-width:640px){.field canvas.bugs{top:-96px;height:calc(100% + 96px)}}
+.field canvas.bugs{top:-66px;height:calc(100% + 66px)}
+@media (max-width:640px){.field canvas.bugs{top:-44px;height:calc(100% + 44px)}}
 
 @media (max-width:640px){
   .scene canvas{height:clamp(230px,36vh,310px)}
@@ -224,7 +229,11 @@ canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
   </div>
   <span class="open"><i></i>Open to product design roles — can join immediately</span>
 </header>
-<div class="field"><canvas id="fieldC" aria-hidden="true"></canvas><canvas class="bugs" id="bugH" aria-hidden="true"></canvas></div>
+<div class="field">
+  <canvas id="fieldC" tabindex="0" role="img" aria-label="A seeded pixel wildflower field. Click or press enter to regrow it."></canvas>
+  <canvas class="bugs" id="bugH" aria-hidden="true"></canvas>
+  <span class="fcap">Move across it · click to regrow</span>
+</div>
 
 <section id="work" class="wrap">
   <div class="sh rv"><h2>Selected work</h2><span class="lbl">One shipped · two concepts</span></div>
@@ -284,8 +293,9 @@ canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
   <div class="sh rv"><h2>Why I design this way</h2></div>
   <div class="me">
     <figure class="port rv">
-      <canvas id="meC" aria-label="Pixel portrait of Jeshmi Hamitkhani"></canvas>
-      <figcaption>Move across it — detail arrives where you look</figcaption>
+      <img src="img/me-420.webp" srcset="img/me-420.webp 420w, img/me.webp 760w"
+        sizes="(max-width:860px) 260px, 300px" width="760" height="950"
+        alt="Jeshmi Hamitkhani" loading="lazy">
     </figure>
     <div class="metx">
     <p class="rv">I started in graphic design — brand identities and landing pages for small businesses, three years of it. That's where the craft in type, layout and colour comes from, and I still reach for it before I reach for a component library.</p>
@@ -362,16 +372,21 @@ function meadow(cv,seed,o){
   o=o||{};
   const ctx=cv.getContext('2d');const PX=o.px||6;
   const DENS=o.dens==null?0.72:o.dens, BIG=o.big!==false;
-  const G=['#D3E6BC','#4C7A33'];
-  const PETAL=['#FFFFFF','#FFFFFF','#FFFFFF','#FDF6E6','#F49BC0','#F9C9DD','#F6C945'];
-  const CEN=['#F6C945','#F6C945','#FBD76B','#CE5287'];
-  let cols,rows,W,H,fl=[];
+  /* same pale register as the closing valley, so the page reads as one system */
+  const G=o.green||['#E2EFD4','#8FB47A'];
+  const PETAL=['#FFFFFF','#FFFFFF','#FFFFFF','#FDF8EC','#F2A8C6','#F9D8E5','#F7D463'];
+  const CEN=['#E9BC3C','#E9BC3C','#F3D781','#CE5287'];
+  let cols,rows,W,H,fl=[],gc=null,gx=null,hx_=-1e4,hy_=-1e4,raf=0,drawn=false;
   const P=(x,y,c)=>{if(x<0||x>=cols||y<0||y>=rows)return;ctx.fillStyle=c;ctx.fillRect(x*PX,y*PX,PX-1,PX-1)};
   function build(){
     const dpr=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;
     if(!W||!H)return false;
     cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
     cols=Math.ceil(W/PX);rows=Math.ceil(H/PX);fl=[];
+    /* the ground is painted once into an offscreen canvas; only the flowers repaint */
+    gc=document.createElement('canvas');gc.width=W*dpr;gc.height=H*dpr;
+    gx=gc.getContext('2d');gx.setTransform(dpr,0,0,dpr,0,0);
+    const GP=(x,y,c)=>{if(x<0||x>=cols||y<0||y>=rows)return;gx.fillStyle=c;gx.fillRect(x*PX,y*PX,PX-1,PX-1)};
     const LN=5;
     for(let L=0;L<LN;L++){
       const d=L/(LN-1), r=mul(seed+L*101), n=noise(mul(seed+L*57));
@@ -381,7 +396,7 @@ function meadow(cv,seed,o){
         tops.push(top);
         for(let cy=top;cy<rows;cy++){
           if(L===0){const e=cy-top;if(e<5&&r()>(e+1)/6)continue;}
-          P(cx,cy,mix(G[0],G[1],Math.min(1,0.12+d*0.34+(cy-top)/Math.max(1,rows-top)*0.75)));
+          GP(cx,cy,mix(G[0],G[1],Math.min(1,0.12+d*0.34+(cy-top)/Math.max(1,rows-top)*0.75)));
         }
       }
       const size=d<0.3?1:d<0.66?2:3, nf=Math.round(cols*DENS*(0.45+d));
@@ -396,7 +411,7 @@ function meadow(cv,seed,o){
       const rb=mul(seed*13+7);
       for(let i=0,nb=Math.max(5,Math.round(cols/26));i<nb;i++)
         fl.push({cx:Math.floor(rb()*cols),cy:Math.round(rows*(0.72+rb()*0.2)),size:4,d:1,
-          pc:rb()>0.26?'#FFFFFF':'#F49BC0',cc:rb()>0.3?'#F6C945':'#CE5287',
+          pc:rb()>0.26?'#FFFFFF':'#F2A8C6',cc:rb()>0.3?'#E9BC3C':'#CE5287',
           stem:mix(G[0],G[1],0.92),st:2+Math.floor(rb()*3)});
     }
     fl.sort((a,b)=>a.d-b.d);
@@ -405,27 +420,43 @@ function meadow(cv,seed,o){
   function paint(n){
     for(let i=0;i<n&&i<fl.length;i++){
       const f=fl[i];
-      if(f.size===1){P(f.cx,f.cy,f.pc);continue}
-      if(f.size===2){P(f.cx,f.cy-1,f.pc);P(f.cx-1,f.cy,f.pc);P(f.cx+1,f.cy,f.pc);
-        P(f.cx,f.cy+1,f.pc);P(f.cx,f.cy,f.cc);P(f.cx,f.cy+2,f.stem);continue}
-      if(f.size===3){for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)if(a||b)P(f.cx+a,f.cy+b,f.pc);
+      /* flowers near the cursor open a size wider — the field notices you */
+      const near=Math.hypot(f.cx*PX-hx_,f.cy*PX-hy_)<46;
+      const sz=near?Math.min(4,f.size+1):f.size;
+      const pc=near?mix(f.pc,'#FFFFFF',.25):f.pc;
+      if(sz===1){P(f.cx,f.cy,pc);continue}
+      if(sz===2){P(f.cx,f.cy-1,pc);P(f.cx-1,f.cy,pc);P(f.cx+1,f.cy,pc);
+        P(f.cx,f.cy+1,pc);P(f.cx,f.cy,f.cc);P(f.cx,f.cy+2,f.stem);continue}
+      if(sz===3){for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)if(a||b)P(f.cx+a,f.cy+b,pc);
         P(f.cx,f.cy,f.cc);for(let s=2;s<2+f.st;s++)P(f.cx,f.cy+s,f.stem);continue}
       [[0,-2],[-1,-1],[0,-1],[1,-1],[-2,0],[-1,0],[1,0],[2,0],[-1,1],[0,1],[1,1],[0,2]]
-        .forEach(([a,b])=>P(f.cx+a,f.cy+b,f.pc));
+        .forEach(([a,b])=>P(f.cx+a,f.cy+b,pc));
       P(f.cx,f.cy,f.cc);for(let s=3;s<3+f.st;s++)P(f.cx,f.cy+s,f.stem);
     }
   }
-  let done=false;
-  function play(){
-    if(done||!build())return;done=true;
+  function blit(){if(gc)ctx.drawImage(gc,0,0,W,H)}
+  function repaint(){if(!drawn)return;blit();paint(fl.length)}
+  const nudge=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;repaint()})};
+  function run(){
+    if(!build())return;drawn=true;blit();
     if(matchMedia('(prefers-reduced-motion: reduce)').matches){paint(fl.length);return}
     const t0=performance.now();
     const step=now=>{const p=Math.min(1,(now-t0)/1500);
-      paint(Math.round(fl.length*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(step)};
+      blit();paint(Math.round(fl.length*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(step)};
     requestAnimationFrame(step);
   }
-  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(done&&build())paint(fl.length)},180)});
-  return {play};
+  function play(){if(drawn)return;run()}
+  function regrow(){seed=Math.floor(Math.random()*1e6);drawn=false;run()}
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    cv.addEventListener('pointermove',e=>{
+      const r=cv.getBoundingClientRect();hx_=e.clientX-r.left;hy_=e.clientY-r.top;nudge()});
+    cv.addEventListener('pointerleave',()=>{hx_=hy_=-1e4;nudge()});
+  }
+  cv.addEventListener('click',regrow);
+  cv.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();regrow()}});
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);
+    rt=setTimeout(()=>{if(drawn){drawn=false;run()}},200)});
+  return {play,regrow};
 }
 
 /* ═══ the closing scene — an alpine lake, six seeded depth planes ═══
@@ -630,7 +661,7 @@ function alpine(cv,o){
 })();
 
 /* the hero opens on a strip of meadow; the page closes on the whole valley */
-const fieldM=meadow(document.getElementById('fieldC'),77,{dens:.52,big:false,px:5});
+const fieldM=meadow(document.getElementById('fieldC'),77,{dens:.62,big:false,px:5});
 const sceneC=document.getElementById('sceneC');
 const valley=alpine(sceneC,{seed:412,px:innerWidth<620?3:4});
 new IntersectionObserver((es,ob)=>es.forEach(e=>{if(e.isIntersecting){valley.start();ob.disconnect()}}),{threshold:.12})
@@ -659,63 +690,6 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
   }),{threshold:.3});
   document.querySelectorAll('[data-vid]').forEach(v=>io.observe(v));
 }
-
-/* ═══ the portrait, sampled into the same grid the landscape uses ═══
-   Five tones, so the wall behind me resolves to white on its own. Where
-   the cursor goes, each cell splits into four and the detail arrives. ═══ */
-function portrait(cv,src,n){
-  const ctx=cv.getContext('2d'), img=new Image();
-  const PAL=['#FFFFFF','#E8EBE3','#A9B4A2','#5C6B55','#232A1E'];
-  const ST=[.745,.585,.425,.245];
-  let CW=0,CH=0,cell=0,co=null,fi=null,mx=-1e4,my=-1e4,raf=0,ready=false;
-  const grid=w=>{
-    const c=document.createElement('canvas');
-    c.width=w;c.height=Math.max(1,Math.round(w*img.height/img.width));
-    const x=c.getContext('2d');x.drawImage(img,0,0,c.width,c.height);
-    let d;try{d=x.getImageData(0,0,c.width,c.height).data}catch(e){return null}
-    const g=new Uint8Array(c.width*c.height);
-    for(let i=0;i<g.length;i++){
-      const v=(d[i*4]*.299+d[i*4+1]*.587+d[i*4+2]*.114)/255;
-      g[i]=v>ST[0]?0:v>ST[1]?1:v>ST[2]?2:v>ST[3]?3:4}
-    return {w:c.width,h:c.height,g}};
-  function build(){
-    CW=cv.clientWidth;if(!CW||!img.width)return false;
-    co=grid(n);fi=grid(n*2);
-    if(!co||!fi){                          /* if pixels can't be read, show the photo plainly */
-      const dpr=Math.min(2,devicePixelRatio||1),hh=Math.round(CW*img.height/img.width);
-      cv.width=CW*dpr;cv.height=hh*dpr;cv.style.height=hh+'px';
-      ctx.setTransform(dpr,0,0,dpr,0,0);ctx.drawImage(img,0,0,CW,hh);co=null;return false}
-    cell=CW/co.w;CH=Math.round(cell*co.h);
-    const dpr=Math.min(2,devicePixelRatio||1);
-    cv.width=CW*dpr;cv.height=CH*dpr;cv.style.height=CH+'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);return true}
-  function draw(){
-    if(!co)return;
-    ctx.clearRect(0,0,CW,CH);
-    const R=cell*3.6, h=cell/2;
-    for(let y=0;y<co.h;y++)for(let x=0;x<co.w;x++){
-      const px=x*cell,py=y*cell;
-      if(Math.hypot(px+h-mx,py+h-my)<R){
-        for(let j=0;j<2;j++)for(let i=0;i<2;i++){
-          const fx=x*2+i,fy=y*2+j;
-          if(fx>=fi.w||fy>=fi.h)continue;
-          ctx.fillStyle=PAL[fi.g[fy*fi.w+fx]];
-          ctx.fillRect(px+i*h,py+j*h,h-.5,h-.5)}
-      }else{
-        ctx.fillStyle=PAL[co.g[y*co.w+x]];
-        ctx.fillRect(px,py,cell-1,cell-1)}}}
-  const nudge=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;draw()})};
-  img.onload=()=>{if(build()){ready=true;draw()}};
-  img.src=src;
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
-    cv.addEventListener('pointermove',e=>{
-      const r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;nudge()});
-    cv.addEventListener('pointerleave',()=>{mx=my=-1e4;nudge()});
-  }
-  let rt;addEventListener('resize',()=>{clearTimeout(rt);
-    rt=setTimeout(()=>{if(ready&&build())draw()},200)});
-}
-portrait(document.getElementById('meC'),'img/me-px.webp',44);
 
 /* ═══ the small residents — a butterfly, a bee, a couple of ladybirds ═══
    They live on their own overlay canvas so the landscape underneath never
