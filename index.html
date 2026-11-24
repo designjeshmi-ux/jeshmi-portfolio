@@ -120,21 +120,34 @@ section{padding:var(--s8) 0 0}
   background:color-mix(in srgb,var(--ink) 5%,transparent)}
 .qd .im img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.16,1,.3,1)}
 .qd:hover .im img{transform:scale(1.035)}
-.qd .lbl{display:block;margin-top:12px}
-.qd h4{font-size:16px;font-weight:500;margin-top:6px;letter-spacing:-.015em;line-height:1.35}
+.qd .lbl{display:block;margin-top:var(--s3)}
+.qd h4{font-size:16.5px;font-weight:500;margin-top:9px;letter-spacing:-.018em;line-height:1.35}
 .qd:hover h4{color:var(--grn)}
-.qd p{color:var(--mid);font-size:14px;margin-top:5px;line-height:1.55}
+.qd p{color:var(--mid);font-size:14px;margin-top:8px;line-height:1.58;max-width:34ch}
 
 /* ── about ── */
-.me{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
-  gap:var(--s6);padding-top:var(--s5);align-items:start}
-.metx{display:grid;gap:var(--s3);max-width:56ch}
+.me{display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);
+  gap:var(--s7);padding-top:var(--s6);align-items:start}
+.metx{display:grid;gap:var(--s3);max-width:54ch}
 .me p{font-size:clamp(16px,1.35vw,18.5px);line-height:1.68;color:var(--mid)}
 .me p b{color:var(--ink);font-weight:500}
-/* the portrait, built from the same grid as the landscape */
-.port{position:sticky;top:96px}
-.port img{display:block;width:100%;height:auto;border-radius:3px}
-@media (max-width:860px){.me{grid-template-columns:1fr}.port{position:static;max-width:260px}}
+.me .lede{font-size:clamp(21px,2.4vw,30px);line-height:1.28;letter-spacing:-.03em;
+  color:var(--ink);font-weight:500;max-width:19ch;margin-bottom:var(--s2)}
+.port{position:sticky;top:92px}
+/* a fixed 4:5 frame, so the photograph is cropped rather than stretched */
+.port img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;
+  object-position:center 22%;border-radius:2px}
+.port figcaption{margin-top:var(--s2);font-family:var(--mono);font-size:10px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--faint);line-height:1.9}
+/* the facts a hiring manager scans for, in one block instead of hidden in prose */
+.facts{margin-top:var(--s4);border-top:1px solid var(--ink);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0 var(--s4)}
+.facts > div{padding:var(--s3) 0;border-bottom:1px solid var(--hair)}
+.facts dt{font-family:var(--mono);font-size:10px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--faint)}
+.facts dd{margin-top:6px;font-size:15px;line-height:1.5;color:var(--ink)}
+@media (max-width:860px){.me{grid-template-columns:1fr;gap:var(--s5)}
+  .port{position:static;max-width:240px}}
 
 /* ── path ── */
 .xp{list-style:none;padding-top:var(--s4)}
@@ -293,13 +306,21 @@ canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
   <div class="me">
     <figure class="port rv">
       <img src="img/me-420.webp" srcset="img/me-420.webp 420w, img/me.webp 760w"
-        sizes="(max-width:860px) 260px, 300px" width="760" height="950"
+        sizes="(max-width:860px) 240px, 330px" width="760" height="950"
         alt="Jeshmi Hamitkhani" loading="lazy">
+      <figcaption>Jeshmi Hamitkhani · Bengaluru</figcaption>
     </figure>
     <div class="metx">
+    <p class="lede rv">I find the decision hiding inside the data, then I build the thing that makes it.</p>
     <p class="rv">I started in graphic design — brand identities and landing pages for small businesses, three years of it. That's where the craft in type, layout and colour comes from, and I still reach for it before I reach for a component library.</p>
     <p class="rv">Then I moved into UX and found the part I actually care about: <b>the moment someone has to make a call with incomplete information.</b> Most tools make that moment harder by showing more. I try to make it easier by showing less — find the decision, cut everything that isn't helping, then prove it with real people before calling it done.</p>
     <p class="rv">These days I design and build. RetailPilot started as my IIT Hyderabad capstone and is now live, and I wrote the front end myself. Designing in code changed how I design: <b>I stopped drawing states I couldn't actually ship.</b></p>
+      <dl class="facts rv">
+        <div><dt>Based</dt><dd>Bengaluru, India — open to remote</dd></div>
+        <div><dt>Focus</dt><dd>B2B SaaS, developer tools, AI features</dd></div>
+        <div><dt>Currently</dt><dd>Contract product &amp; UX designer</dd></div>
+        <div><dt>Studied</dt><dd>PG diploma in Visual Design &amp; UX, IIT Hyderabad</dd></div>
+      </dl>
     </div>
   </div>
 </section>
