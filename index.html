@@ -76,10 +76,9 @@ h1 span>i{display:block;font-style:normal;transform:translateY(108%);
 .open i{width:7px;height:7px;border-radius:50%;background:var(--grn-l);
   box-shadow:0 0 0 4px color-mix(in srgb,var(--grn-l) 20%,transparent)}
 .field{margin-top:var(--s6);margin-bottom:var(--s4);width:100vw;margin-left:calc(50% - 50vw);position:relative}
-.field canvas{display:block;width:100%;height:clamp(104px,15vh,158px);cursor:crosshair;outline:none}
+.field canvas{display:block;width:100%;height:clamp(230px,34vh,360px);cursor:crosshair;outline:none}
 .field canvas:focus-visible{outline:2px solid var(--grn);outline-offset:-3px}
-.field::after{content:"";position:absolute;inset:0 0 auto;height:42%;z-index:3;pointer-events:none;
-  background:linear-gradient(180deg,var(--bg),transparent)}
+
 .fcap{position:absolute;right:var(--gut);bottom:9px;z-index:4;font-family:var(--mono);font-size:9.5px;
   letter-spacing:.09em;text-transform:uppercase;color:#2B3327;background:rgba(255,255,255,.76);
   border-radius:99px;padding:4px 10px;pointer-events:none}
@@ -196,7 +195,7 @@ section{padding:var(--s8) 0 0}
 .field{position:relative}
 canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;cursor:default}
 /* over the hero strip they get the white air above the field to fly in */
-.field canvas.bugs{top:-66px;height:calc(100% + 66px)}
+.field canvas.bugs{top:0;height:100%}
 @media (max-width:640px){.field canvas.bugs{top:-44px;height:calc(100% + 44px)}}
 
 @media (max-width:640px){
@@ -232,7 +231,7 @@ canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
 <div class="field">
   <canvas id="fieldC" tabindex="0" role="img" aria-label="A seeded pixel wildflower field. Click or press enter to regrow it."></canvas>
   <canvas class="bugs" id="bugH" aria-hidden="true"></canvas>
-  <span class="fcap">Move across it · click to regrow</span>
+  <span class="fcap">Move across it — your cursor is the wind · click to regrow</span>
 </div>
 
 <section id="work" class="wrap">
@@ -368,95 +367,129 @@ const hx=c=>[1,3,5].map(i=>parseInt(c.substr(i,2),16));
 const mix=(c1,c2,t)=>{const[a,b,c]=hx(c1),[d,e,f]=hx(c2);
   return`rgb(${Math.round(a+(d-a)*t)},${Math.round(b+(e-b)*t)},${Math.round(c+(f-c)*t)})`};
 
-function meadow(cv,seed,o){
+/* ═══ the hero scene — sky, weather, horizon, meadow ═══
+   Built as a composition rather than scattered noise: the sky and ground
+   paint once into offscreen canvases, the clouds drift on their own, and
+   the flowers are placed on a jittered grid in receding rows so the eye
+   can read rows of flowers instead of confetti. ═══ */
+function scenery(cv,o){
   o=o||{};
-  const ctx=cv.getContext('2d');const PX=o.px||6;
-  const DENS=o.dens==null?0.72:o.dens, BIG=o.big!==false;
-  /* same pale register as the closing valley, so the page reads as one system */
-  const G=o.green||['#E2EFD4','#8FB47A'];
-  const PETAL=['#FFFFFF','#FFFFFF','#FFFFFF','#FDF8EC','#F2A8C6','#F9D8E5','#F7D463'];
-  const CEN=['#E9BC3C','#E9BC3C','#F3D781','#CE5287'];
-  let cols,rows,W,H,fl=[],gc=null,gx=null,hx_=-1e4,hy_=-1e4,raf=0,drawn=false;
-  const P=(x,y,c)=>{if(x<0||x>=cols||y<0||y>=rows)return;ctx.fillStyle=c;ctx.fillRect(x*PX,y*PX,PX-1,PX-1)};
+  const ctx=cv.getContext('2d'), PX=o.px||5;
+  const SKY=['#3FA6E4','#C6E8FA'];              /* overhead → horizon */
+  const CLOUD=['#FFFFFF','#F4FAFE','#CFE6F5'];
+  const FAR=['#9CC97C','#6AA04E'], NEAR=['#7FBA5C','#245C20'];
+  const PETAL=['#FFFFFF','#F58AA8','#F7C843','#E8554C','#F3A050','#D94A8C','#FFFFFF','#7FA8F0'];
+  const EYE=['#F7C843','#F7C843','#FFFFFF','#E8955C'];
+  let W,H,cols,rows,seed=o.seed||21,sky=null,gnd=null,cl=null,fl=[],
+      wind=0,target=0,t0=0,raf=0,live=false,grown=0;
+  const mk=(w,h)=>{const c=document.createElement('canvas');const d=Math.min(2,devicePixelRatio||1);
+    c.width=w*d;c.height=h*d;const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return{c,x}};
+  const pen=x=>(a,b,col)=>{if(b<0||b>=rows)return;x.fillStyle=col;x.fillRect(a*PX,b*PX,PX-1,PX-1)};
+
   function build(){
-    const dpr=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;
-    if(!W||!H)return false;
-    cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
-    cols=Math.ceil(W/PX);rows=Math.ceil(H/PX);fl=[];
-    /* the ground is painted once into an offscreen canvas; only the flowers repaint */
-    gc=document.createElement('canvas');gc.width=W*dpr;gc.height=H*dpr;
-    gx=gc.getContext('2d');gx.setTransform(dpr,0,0,dpr,0,0);
-    const GP=(x,y,c)=>{if(x<0||x>=cols||y<0||y>=rows)return;gx.fillStyle=c;gx.fillRect(x*PX,y*PX,PX-1,PX-1)};
-    const LN=5;
-    for(let L=0;L<LN;L++){
-      const d=L/(LN-1), r=mul(seed+L*101), n=noise(mul(seed+L*57));
-      const amp=rows*(0.05+d*0.09), base=rows*(0.20+d*0.34), tops=[];
-      for(let cx=0;cx<cols;cx++){
-        const top=Math.max(0,Math.round(base-Math.round(fbm(n,(cx+L*19)/13,3)*amp)));
-        tops.push(top);
-        for(let cy=top;cy<rows;cy++){
-          if(L===0){const e=cy-top;if(e<5&&r()>(e+1)/6)continue;}
-          GP(cx,cy,mix(G[0],G[1],Math.min(1,0.12+d*0.34+(cy-top)/Math.max(1,rows-top)*0.75)));
-        }
-      }
-      const size=d<0.3?1:d<0.66?2:3, nf=Math.round(cols*DENS*(0.45+d));
-      for(let i=0;i<nf;i++){
-        const cx=Math.floor(r()*cols),top=tops[cx];
-        const cy=top+Math.floor(r()*Math.max(2,Math.round((rows-top)*0.5)));
-        fl.push({cx,cy,size,d,pc:PETAL[Math.floor(r()*PETAL.length)],cc:CEN[Math.floor(r()*CEN.length)],
-          stem:mix(G[0],G[1],Math.min(1,0.55+d*0.3)),st:1+Math.floor(r()*3)});
+    W=cv.clientWidth;H=cv.clientHeight;if(!W||!H)return false;
+    const d=Math.min(2,devicePixelRatio||1);
+    cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+    cols=Math.ceil(W/PX);rows=Math.ceil(H/PX);
+    const hz=Math.round(rows*.60);               /* horizon sits low, like the reference */
+    const r=mul(seed), n=noise(mul(seed+13));
+
+    /* sky */
+    sky=mk(W,H);const SP=pen(sky.x);
+    for(let y=0;y<hz+2;y++){const c=mix(SKY[0],SKY[1],Math.pow(y/(hz+2),.9));
+      for(let x=0;x<cols;x++)SP(x,y,c)}
+
+    /* one wide cloud band, drawn twice its width so it can scroll seamlessly */
+    const cw=cols*2;
+    cl=mk(cw*PX,H);const CP=(a,b,col)=>{if(b<0||b>=rows)return;cl.x.fillStyle=col;cl.x.fillRect(a*PX,b*PX,PX-1,PX-1)};
+    const rc=mul(seed*7+1);
+    for(let i=0,nc=Math.round(cw/14);i<nc;i++){
+      const cx=Math.floor(rc()*cw), cy=Math.round(rows*(.10+rc()*.30)), len=5+Math.floor(rc()*14);
+      for(let k=-len;k<=len;k++){
+        const h=Math.round(Math.sqrt(Math.max(0,len*len-k*k))*(.30+rc()*.14));
+        for(let j=0;j<=h;j++){
+          const col=j===h?CLOUD[1]:(j<1?CLOUD[2]:CLOUD[0]);
+          CP(cx+k,cy-j,col);CP(cx+k-cw,cy-j,col)}}}
+
+    /* ground: a soft far ridge, then the meadow */
+    gnd=mk(W,H);const GP=pen(gnd.x);
+    for(let x=0;x<cols;x++){
+      const far=hz-Math.round(fbm(n,x/21,3)*rows*.05);
+      for(let y=far;y<hz+1;y++)GP(x,y,mix(FAR[0],FAR[1],(y-far)/Math.max(1,hz-far)));
+      for(let y=hz+1;y<rows;y++){
+        const k=(y-hz)/Math.max(1,rows-hz);
+        let c=mix(NEAR[0],NEAR[1],Math.min(1,.1+k*1.05));
+        if(r()<.07)c=mix(c,'#FFFFFF',.12);
+        GP(x,y,c)}}
+
+    /* flowers on a jittered grid, in receding rows — this is what stops it reading as noise */
+    fl=[];const rf=mul(seed*31+5);
+    const ROWS=7;
+    for(let i=0;i<ROWS;i++){
+      const d=i/(ROWS-1);                         /* 0 = at the horizon, 1 = at your feet */
+      const y=Math.round(hz+1+d*(rows-hz-5));
+      const step=Math.max(3,Math.round(11-d*7));  /* nearer rows are denser */
+      const size=d<.22?1:d<.58?3:5;
+      for(let x=Math.round(rf()*step);x<cols;x+=step){
+        if(rf()<.1)continue;                      /* gaps, so it breathes */
+        fl.push({x:x+Math.floor(rf()*3)-1,y:y+Math.floor(rf()*3)-1,size,d,
+          pc:PETAL[Math.floor(rf()*PETAL.length)],cc:EYE[Math.floor(rf()*EYE.length)],
+          st:1+Math.floor(rf()*3),sw:.4+rf()});
       }
     }
-    if(BIG){
-      const rb=mul(seed*13+7);
-      for(let i=0,nb=Math.max(5,Math.round(cols/26));i<nb;i++)
-        fl.push({cx:Math.floor(rb()*cols),cy:Math.round(rows*(0.72+rb()*0.2)),size:4,d:1,
-          pc:rb()>0.26?'#FFFFFF':'#F2A8C6',cc:rb()>0.3?'#E9BC3C':'#CE5287',
-          stem:mix(G[0],G[1],0.92),st:2+Math.floor(rb()*3)});
-    }
-    fl.sort((a,b)=>a.d-b.d);
     return true;
   }
-  function paint(n){
+
+  function flowers(n,w){
+    const P=pen(ctx);
     for(let i=0;i<n&&i<fl.length;i++){
       const f=fl[i];
-      /* flowers near the cursor open a size wider — the field notices you */
-      const near=Math.hypot(f.cx*PX-hx_,f.cy*PX-hy_)<46;
-      const sz=near?Math.min(4,f.size+1):f.size;
-      const pc=near?mix(f.pc,'#FFFFFF',.25):f.pc;
-      if(sz===1){P(f.cx,f.cy,pc);continue}
-      if(sz===2){P(f.cx,f.cy-1,pc);P(f.cx-1,f.cy,pc);P(f.cx+1,f.cy,pc);
-        P(f.cx,f.cy+1,pc);P(f.cx,f.cy,f.cc);P(f.cx,f.cy+2,f.stem);continue}
-      if(sz===3){for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)if(a||b)P(f.cx+a,f.cy+b,pc);
-        P(f.cx,f.cy,f.cc);for(let s=2;s<2+f.st;s++)P(f.cx,f.cy+s,f.stem);continue}
-      [[0,-2],[-1,-1],[0,-1],[1,-1],[-2,0],[-1,0],[1,0],[2,0],[-1,1],[0,1],[1,1],[0,2]]
-        .forEach(([a,b])=>P(f.cx+a,f.cy+b,pc));
-      P(f.cx,f.cy,f.cc);for(let s=3;s<3+f.st;s++)P(f.cx,f.cy+s,f.stem);
+      const bend=Math.round(w*f.sw*(.4+f.d));     /* nearer flowers lean further */
+      const x=f.x+bend, y=f.y;
+      const g=mix(NEAR[0],NEAR[1],.55+f.d*.35);
+      for(let s=1;s<=f.st+Math.round(f.d*2);s++)P(f.x+Math.round(bend*(1-s/(f.st+3))),y+s,g);
+      if(f.size===1){P(x,y,f.pc);continue}
+      if(f.size===3){P(x,y-1,f.pc);P(x-1,y,f.pc);P(x+1,y,f.pc);P(x,y+1,f.pc);P(x,y,f.cc);continue}
+      P(x,y-2,f.pc);P(x-1,y-1,f.pc);P(x,y-1,f.pc);P(x+1,y-1,f.pc);
+      P(x-2,y,f.pc);P(x-1,y,f.pc);P(x+1,y,f.pc);P(x+2,y,f.pc);
+      P(x-1,y+1,f.pc);P(x,y+1,f.pc);P(x+1,y+1,f.pc);P(x,y+2,f.pc);
+      P(x,y,f.cc);
     }
   }
-  function blit(){if(gc)ctx.drawImage(gc,0,0,W,H)}
-  function repaint(){if(!drawn)return;blit();paint(fl.length)}
-  const nudge=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;repaint()})};
-  function run(){
-    if(!build())return;drawn=true;blit();
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches){paint(fl.length);return}
-    const t0=performance.now();
-    const step=now=>{const p=Math.min(1,(now-t0)/1500);
-      blit();paint(Math.round(fl.length*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(step)};
-    requestAnimationFrame(step);
+
+  function frame(now){
+    const drift=((now-t0)*.012)%(cols*PX);
+    wind+=(target-wind)*.06; target*=.94;
+    ctx.clearRect(0,0,W,H);
+    ctx.drawImage(sky.c,0,0,W,H);
+    ctx.drawImage(cl.c,-drift,0,cols*2*PX,H);
+    ctx.drawImage(gnd.c,0,0,W,H);
+    if(grown<1)grown=Math.min(1,grown+.022);
+    flowers(Math.round(fl.length*(1-Math.pow(1-grown,3))),wind);
+    raf=requestAnimationFrame(frame);
   }
-  function play(){if(drawn)return;run()}
-  function regrow(){seed=Math.floor(Math.random()*1e6);drawn=false;run()}
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
-    cv.addEventListener('pointermove',e=>{
-      const r=cv.getBoundingClientRect();hx_=e.clientX-r.left;hy_=e.clientY-r.top;nudge()});
-    cv.addEventListener('pointerleave',()=>{hx_=hy_=-1e4;nudge()});
+
+  function start(){
+    if(live||!build())return;live=true;grown=0;t0=performance.now();
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+      ctx.drawImage(sky.c,0,0,W,H);ctx.drawImage(cl.c,0,0,cols*2*PX,H);
+      ctx.drawImage(gnd.c,0,0,W,H);grown=1;flowers(fl.length,0);return}
+    raf=requestAnimationFrame(frame);
   }
+  function regrow(){seed=Math.floor(Math.random()*1e6);if(!build())return;grown=0;target=2.4}
+
+  cv.addEventListener('pointermove',e=>{
+    const r=cv.getBoundingClientRect();
+    target=((e.clientX-r.left)/r.width-.5)*3.4;    /* your cursor is the wind */
+  });
+  cv.addEventListener('pointerleave',()=>{target=0});
   cv.addEventListener('click',regrow);
   cv.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();regrow()}});
-  let rt;addEventListener('resize',()=>{clearTimeout(rt);
-    rt=setTimeout(()=>{if(drawn){drawn=false;run()}},200)});
-  return {play,regrow};
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(live)build()},220)});
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){start()}else if(raf){cancelAnimationFrame(raf);raf=0;live=false}
+  }),{threshold:0}).observe(cv);
+  return {start,regrow};
 }
 
 /* ═══ the closing scene — an alpine lake, six seeded depth planes ═══
@@ -661,14 +694,14 @@ function alpine(cv,o){
 })();
 
 /* the hero opens on a strip of meadow; the page closes on the whole valley */
-const fieldM=meadow(document.getElementById('fieldC'),77,{dens:.62,big:false,px:5});
+const fieldM=scenery(document.getElementById('fieldC'),{seed:77,px:5});
 const sceneC=document.getElementById('sceneC');
 const valley=alpine(sceneC,{seed:412,px:innerWidth<620?3:4});
 new IntersectionObserver((es,ob)=>es.forEach(e=>{if(e.isIntersecting){valley.start();ob.disconnect()}}),{threshold:.12})
   .observe(sceneC);
 document.getElementById('regrow').addEventListener('click',e=>{e.stopPropagation();valley.regrow()});
 
-requestAnimationFrame(()=>{document.body.classList.add('go');setTimeout(()=>fieldM.play(),240)});
+requestAnimationFrame(()=>{document.body.classList.add('go')});
 
 /* reveals */
 document.querySelectorAll('.rv').forEach((el,i)=>{
