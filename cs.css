@@ -2,19 +2,19 @@
    Layout: one 1200px column on warm paper; each case gets its folder colour as --tint and a product accent as --pa.
    Reading order on every page: 30-second summary → problem → research → insight → decisions → the product → impact → reflection. */
 :root {
-  --bg: #F6F2EC;
-  --paper: #FFFDF9;
-  --ink: #2B2530;
-  --muted: #6F6872;
-  --line: rgba(43, 37, 48, .1);
+  --bg: #FFFFFF;
+  --paper: #FCFCFB;
+  --ink: #000000;
+  --muted: #6B6B6B;
+  --line: #E4E3DF;
   --magenta: #9B2F66;
   --tint: #F9DCE9;
   --tint-ink: #8E2457;
   --pa: #2563EB;
-  --sans: 'Manrope', 'Avenir Next', system-ui, sans-serif;
+  --sans: 'General Sans', 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
   --hand: 'Caveat', 'Bradley Hand', cursive;
-  --ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --ui: 'General Sans', 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, Menlo, Consolas, monospace;
   --ease: cubic-bezier(.16, 1, .3, 1);
   color-scheme: light;
 }
