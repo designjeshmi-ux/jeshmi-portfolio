@@ -13,15 +13,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FCFBF8; --ink:#16141B; --mid:#817B88; --faint:#A8A2AE; --hair:rgba(22,20,27,.11);
+  --bg:#FCFAF8; --ink:#1A1317; --mid:#8A7280; --faint:#B0A0A8; --hair:rgba(155,47,102,.14);
   --rose:#9B2F66; --rose-l:#E0548F;
   --gut:clamp(20px,4.6vw,76px);
   --sans:'Inter Tight',system-ui,-apple-system,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#111016;--ink:#F2EFF4;--mid:#938D9B;--faint:#6E6876;--hair:rgba(242,239,244,.14);--rose-l:#F07CAE}}
-:root[data-theme="dark"]{--bg:#111016;--ink:#F2EFF4;--mid:#938D9B;--faint:#6E6876;--hair:rgba(242,239,244,.14)}
+  --bg:#141015;--ink:#F4EFF2;--mid:#9C8893;--faint:#73636C;--hair:rgba(224,84,143,.18);--rose-l:#F07CAE}}
+:root[data-theme="dark"]{--bg:#141015;--ink:#F4EFF2;--mid:#9C8893;--faint:#73636C;--hair:rgba(224,84,143,.18)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
@@ -73,7 +73,9 @@ h1 .dim{color:var(--mid)}
 .tldr .swt{background:var(--rose)}.tldr .swt::after{transform:translateX(16px)}.tldr .tl{color:var(--rose)}
 
 .band{margin-top:auto;position:relative;width:100vw;margin-left:calc(50% - 50vw)}
-.band canvas{display:block;width:100%;height:clamp(150px,24vh,240px)}
+.band::before{content:"";position:absolute;inset:-46% 0 0;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(155,47,102,.055) 62%,rgba(155,47,102,.10))}
+.band canvas{display:block;width:100%;height:clamp(186px,29vh,296px)}
 .flag{position:absolute;transform:translate(-50%,-100%);text-align:center;white-space:nowrap;pointer-events:none;
   opacity:0;transition:opacity .7s ease}
 .go .flag{opacity:1;transition-delay:2s}
@@ -345,7 +347,7 @@ const mix=(c1,c2,t)=>{const[a,b,c]=hx(c1),[d,e,f]=hx(c2);
 /* ── the hills: noise resolving, with one decision standing out of it ── */
 function hills(cv,o){
   const ctx=cv.getContext('2d');let cols,rows,W,H,hs=[];
-  const px=o.px||6, LN=o.layers||3, G=o.grey||['#E8E5E0','#55505A'];
+  const px=o.px||7, LN=o.layers||3, G=o.grey||['#FBEDF4','#A85580'];
   function build(){
     const dpr=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;
     if(!W||!H)return false;
@@ -353,9 +355,9 @@ function hills(cv,o){
     cols=Math.ceil(W/px);rows=Math.ceil(H/px);hs=[];
     for(let L=0;L<LN;L++){
       const d=LN<2?1:L/(LN-1), n=noise(mul(o.seed+L*97));
-      const amp=rows*(0.26+d*0.24), base=rows*(0.50+d*0.50);
+      const amp=rows*(0.34+d*0.30), base=rows*(0.40+d*0.60);
       const col=[];
-      for(let cx=0;cx<cols;cx++) col.push(Math.max(0,Math.round(base-Math.round(fbm(n,(cx+L*21.3)/13,4)*amp))));
+      for(let cx=0;cx<cols;cx++) col.push(Math.max(0,Math.round(base-Math.round(Math.pow(fbm(n,(cx+L*21.3)/23,4),1.35)*1.7*amp))));
       hs.push({top:col,d});
     }
     return true;
@@ -372,9 +374,9 @@ function hills(cv,o){
         const full=rows-top[cx], grown=Math.round(full*lp);
         for(let cy=rows-grown;cy<rows;cy++){
           const edge=cy-(rows-full), dd=edge/Math.max(1,full);
-          let col=mix(G[0],G[1],Math.min(1,0.08+d*0.3+dd*0.66));
-          if(edge===0)col=mix(col,'#FFFFFF',.34);
-          if(edge<2&&fr()*100<3)col=['#9B2F66','#E0548F','#FFFFFF'][Math.floor(fr()*3)];
+          let col=mix(G[0],G[1],Math.min(1,0.06+d*0.64+dd*0.17));
+          if(edge===0)col=mix(col,'#FFFFFF',.30);
+          if(edge<2&&d>0.3&&fr()*100<1.8)col='#FFFFFF';
           ctx.fillStyle=col;ctx.fillRect(cx*px,cy*px,px-1,px-1);
         }
       }
@@ -401,9 +403,9 @@ function hills(cv,o){
 /* ── the meadow: the page ends in bloom ── */
 function meadow(cv,seed){
   const ctx=cv.getContext('2d');const PX=6;
-  const G=['#D3E6BC','#4C7A33'];
-  const PETAL=['#FFFFFF','#FFFFFF','#FFFFFF','#FDF6E6','#F49BC0','#F9C9DD','#F6C945'];
-  const CEN=['#F6C945','#F6C945','#FBD76B','#9B2F66'];
+  const G=['#DCE4D0','#5E7257'];
+  const PETAL=['#FFFFFF','#FFFFFF','#FFFFFF','#FBF4F7','#E9B3C9','#F6DCE6','#C9779B'];
+  const CEN=['#E8C7A0','#FFFFFF','#F3DCC4','#9B2F66'];
   let cols,rows,W,H,fl=[];
   const P=(x,y,c)=>{if(x<0||x>=cols||y<0||y>=rows)return;ctx.fillStyle=c;ctx.fillRect(x*PX,y*PX,PX-1,PX-1)};
   function build(){
@@ -434,7 +436,7 @@ function meadow(cv,seed){
     const rb=mul(seed*13+7);
     for(let i=0,nb=Math.max(5,Math.round(cols/26));i<nb;i++)
       fl.push({cx:Math.floor(rb()*cols),cy:Math.round(rows*(0.72+rb()*0.2)),size:4,d:1,
-        pc:rb()>0.26?'#FFFFFF':'#F49BC0',cc:rb()>0.3?'#F6C945':'#9B2F66',
+        pc:rb()>0.26?'#FFFFFF':'#E9B3C9',cc:rb()>0.3?'#E8C7A0':'#9B2F66',
         stem:mix(G[0],G[1],0.92),st:2+Math.floor(rb()*3)});
     fl.sort((a,b)=>a.d-b.d);
     return true;
@@ -466,7 +468,13 @@ function meadow(cv,seed){
 }
 
 /* ── wire it up ── */
-hills(document.getElementById('mk'),{seed:4,px:4,layers:3}).still();
+(function(){  /* nav mark: the decision peak, drawn as a glyph so it stays legible at 26px */
+  const cv=document.getElementById('mk');if(!cv)return;
+  const d=Math.min(2,devicePixelRatio||1),S=26,N=7,u=S/N;
+  cv.width=S*d;cv.height=S*d;const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);
+  const H=[2,3,3,4,7,3,2], T=['#EBC6D7','#DCAAC3','#DCAAC3','#CE93B0','#9B2F66','#DCAAC3','#EBC6D7'];
+  H.forEach((h,x)=>{for(let y=N-h;y<N;y++){c.fillStyle=T[x];c.fillRect(x*u,y*u,u-1,u-1)}});
+})();
 
 const flag=document.getElementById('flag');
 const hero=hills(document.getElementById('heroC'),{
