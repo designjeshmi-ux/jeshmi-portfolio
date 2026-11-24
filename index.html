@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Jeshmi Hamitkhani · Product Designer, B2B SaaS &amp; AI</title>
 <meta name="description" content="Product designer in Bengaluru. I design the decision, not the dashboard. B2B SaaS and AI products — one shipped and live.">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -18,6 +21,9 @@
   --bg:#FFFFFF; --ink:#000000; --mid:#6B6B6B; --faint:#9B9B9B; --hair:#E4E3DF;
   --grn:#2F6B23; --grn-l:#4C8F39;
   --gut:clamp(20px,5vw,84px);
+  /* one spacing scale; nothing in this page picks its own number */
+  --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:clamp(40px,6vw,64px);
+  --s6:clamp(56px,8vw,96px); --s7:clamp(76px,11vw,132px); --s8:clamp(96px,15vw,184px);
   /* General Sans from Fontshare, with a near-match that survives stricter CSPs */
   --sans:'General Sans','Plus Jakarta Sans','Helvetica Neue',Arial,sans-serif;
   --mono:'Geist Mono',ui-monospace,Menlo,monospace;
@@ -73,36 +79,36 @@ h1 span>i{display:block;font-style:normal;transform:translateY(108%);
 .field canvas{display:block;width:100%;height:clamp(120px,19vh,190px)}
 
 /* ── sections ── */
-section{padding:clamp(66px,10vh,124px) 0 0}
-.sh{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;
-  padding-bottom:14px;border-bottom:1px solid var(--ink)}
+section{padding:var(--s8) 0 0}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2);flex-wrap:wrap;
+  padding-bottom:var(--s2);border-bottom:1px solid var(--ink)}
 .sh h2{font-weight:500;font-size:clamp(25px,3vw,38px);
   letter-spacing:-.034em;line-height:1.04}
 .rv{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1)}
 .rv.in{opacity:1;transform:none}
 
 /* ── work: tags, title, one outcome with the number in bold ── */
-.wk{display:block;text-decoration:none;padding:clamp(26px,3.6vw,42px) 0;border-bottom:1px solid var(--hair)}
+.wk{display:block;text-decoration:none;padding:var(--s6) 0;border-bottom:1px solid var(--hair)}
 .tags{display:flex;flex-wrap:wrap;gap:6px 9px;font-family:var(--mono);font-size:11px;
   letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
 .tags .liv{color:var(--grn);font-weight:500}
 .wk h3{font-weight:500;font-size:clamp(24px,3.2vw,40px);
-  line-height:1.1;letter-spacing:-.036em;margin-top:11px;max-width:20ch;transition:color .25s}
+  line-height:1.1;letter-spacing:-.036em;margin-top:var(--s2);max-width:20ch;transition:color .25s}
 .wk:hover h3{color:var(--grn)}
-.wk .out{margin-top:12px;font-size:16.5px;line-height:1.6;color:var(--mid);max-width:58ch}
+.wk .out{margin-top:var(--s3);font-size:16.5px;line-height:1.6;color:var(--mid);max-width:58ch}
 .wk .out b{color:var(--ink);font-weight:600}
-.wk .more{display:inline-block;margin-top:14px;font-size:14px;color:var(--ink);
+.wk .more{display:inline-block;margin-top:var(--s3);font-size:14px;color:var(--ink);
   border-bottom:1px solid var(--hair);transition:border-color .25s}
 .wk:hover .more{border-color:var(--ink)}
-.media{position:relative;display:block;margin-top:clamp(20px,2.6vw,30px);max-width:780px;
+.media{position:relative;display:block;margin-top:var(--s4);max-width:780px;
   aspect-ratio:16/10;border-radius:4px;overflow:hidden;background:color-mix(in srgb,var(--ink) 5%,transparent)}
 .media img,.media video{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
 .media video{position:absolute;inset:0;opacity:0;transition:opacity .5s}
 .media video.on{opacity:1}
 
 /* ── side quests ── */
-.sq{display:grid;grid-template-columns:repeat(auto-fit,minmax(244px,1fr));gap:clamp(14px,2vw,26px);
-  padding-top:clamp(24px,3vw,36px)}
+.sq{display:grid;grid-template-columns:repeat(auto-fit,minmax(244px,1fr));gap:var(--s5);
+  padding-top:var(--s5)}
 .qd{text-decoration:none;display:block}
 .qd .im{display:block;aspect-ratio:16/10;overflow:hidden;border-radius:4px;
   background:color-mix(in srgb,var(--ink) 5%,transparent)}
@@ -114,14 +120,22 @@ section{padding:clamp(66px,10vh,124px) 0 0}
 .qd p{color:var(--mid);font-size:14px;margin-top:5px;line-height:1.55}
 
 /* ── about ── */
-.me{display:grid;gap:clamp(16px,2vw,22px);padding-top:clamp(26px,3.6vw,44px);max-width:64ch}
+.me{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
+  gap:var(--s6);padding-top:var(--s5);align-items:start}
+.metx{display:grid;gap:var(--s3);max-width:56ch}
 .me p{font-size:clamp(16px,1.35vw,18.5px);line-height:1.68;color:var(--mid)}
 .me p b{color:var(--ink);font-weight:500}
+/* the portrait, built from the same grid as the landscape */
+.port{position:sticky;top:96px}
+.port canvas{display:block;width:100%;cursor:crosshair}
+.port figcaption{margin-top:var(--s2);font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--faint);line-height:1.7}
+@media (max-width:860px){.me{grid-template-columns:1fr}.port{position:static;max-width:260px}}
 
 /* ── path ── */
-.xp{list-style:none;padding-top:clamp(18px,3vw,30px)}
-.xp li{display:grid;grid-template-columns:minmax(0,160px) minmax(0,1fr);gap:clamp(14px,3vw,46px);
-  padding:clamp(18px,2.4vw,28px) 0;border-bottom:1px solid var(--hair)}
+.xp{list-style:none;padding-top:var(--s4)}
+.xp li{display:grid;grid-template-columns:minmax(0,160px) minmax(0,1fr);gap:var(--s4);
+  padding:var(--s4) 0;border-bottom:1px solid var(--hair)}
 .xp .when{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);line-height:1.8}
 .xp .when b{display:block;color:var(--mid);font-weight:400}
 .xp h3{font-size:17px;font-weight:500;letter-spacing:-.015em}
@@ -131,21 +145,21 @@ section{padding:clamp(66px,10vh,124px) 0 0}
 .nda dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
 .nda dd{font-size:13.5px;margin-top:4px;line-height:1.45}
 .nda dd b{color:var(--grn);font-weight:600}
-.tools{display:flex;flex-wrap:wrap;gap:7px;padding-top:clamp(18px,3vw,28px)}
+.tools{display:flex;flex-wrap:wrap;gap:var(--s1);padding-top:var(--s5)}
 .tools span{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--hair);border-radius:99px;
   padding:6px 13px 6px 8px;font-size:13px;color:var(--mid)}
 .tools img{width:16px;height:16px;border-radius:3px;display:block}
 .tools b{color:var(--ink);font-weight:500}
 
 /* ── contact ── */
-.end{padding:clamp(72px,11vh,140px) 0 0}
+.end{padding:var(--s8) 0 0}
 .end h2{font-weight:500;font-size:clamp(36px,6.4vw,84px);
   line-height:1.02;letter-spacing:-.042em;max-width:15ch}
 .end h2 a{color:var(--grn);text-decoration:none;border-bottom:2px solid transparent;transition:border-color .3s}
 .end h2 a:hover{border-color:var(--grn)}
 .end .sub{margin-top:18px;font-size:17px;color:var(--mid);max-width:46ch}
-.det{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:4px 26px;
-  margin-top:clamp(36px,5vw,60px);padding-top:20px;border-top:1px solid var(--hair)}
+.det{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:4px var(--s3);
+  margin-top:var(--s6);padding-top:var(--s3);border-top:1px solid var(--hair)}
 .det > div{padding:11px 0}
 .det dt{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
 .det dd{margin-top:5px;font-size:15px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
@@ -160,7 +174,10 @@ section{padding:clamp(66px,10vh,124px) 0 0}
 
 /* ── the closing valley ── */
 .scene{width:100vw;margin-left:calc(50% - 50vw);margin-top:34px;position:relative}
-.scene canvas{display:block;width:100%;height:clamp(340px,60vh,600px);cursor:crosshair;outline:none}
+.scene canvas{display:block;width:100%;height:clamp(280px,46vh,470px);cursor:crosshair;outline:none}
+/* let the top of the valley dissolve into the page, the way hers does */
+.scene::before{content:"";position:absolute;inset:0 0 auto;height:34%;z-index:3;pointer-events:none;
+  background:linear-gradient(180deg,var(--bg),color-mix(in srgb,var(--bg) 55%,transparent) 55%,transparent)}
 .scene canvas:focus-visible{outline:2px solid var(--grn);outline-offset:-4px}
 .scap{position:absolute;left:var(--gut);right:var(--gut);bottom:12px;display:flex;
   justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;pointer-events:none}
@@ -266,9 +283,15 @@ canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none
 <section id="about" class="wrap">
   <div class="sh rv"><h2>Why I design this way</h2></div>
   <div class="me">
+    <figure class="port rv">
+      <canvas id="meC" aria-label="Pixel portrait of Jeshmi Hamitkhani"></canvas>
+      <figcaption>Move across it — detail arrives where you look</figcaption>
+    </figure>
+    <div class="metx">
     <p class="rv">I started in graphic design — brand identities and landing pages for small businesses, three years of it. That's where the craft in type, layout and colour comes from, and I still reach for it before I reach for a component library.</p>
     <p class="rv">Then I moved into UX and found the part I actually care about: <b>the moment someone has to make a call with incomplete information.</b> Most tools make that moment harder by showing more. I try to make it easier by showing less — find the decision, cut everything that isn't helping, then prove it with real people before calling it done.</p>
     <p class="rv">These days I design and build. RetailPilot started as my IIT Hyderabad capstone and is now live, and I wrote the front end myself. Designing in code changed how I design: <b>I stopped drawing states I couldn't actually ship.</b></p>
+    </div>
   </div>
 </section>
 
@@ -412,11 +435,11 @@ function alpine(cv,o){
   o=o||{};
   const PX=o.px||5, PAD=46, out=cv.getContext('2d');
   const SHIFT=[2,5,10,4,16,26];                 /* sky → meadow: nearer moves more */
-  const SKY=['#2F7CC6','#AEDAF2'], CLOUD=['#FFFFFF','#EAF4FC'];
-  const GRASS=['#6E9D4C','#3C6329'], ROCK=['#A7A69B','#5F6058'];
-  const PINE=['#2F5434','#162B1C'], WATER=['#8FD8CE','#1F6B84'];
-  const STONE=['#DCD4C3','#7A7368'];
-  const MEAD=['#A9CC89','#38602A'];
+  const SKY=['#CFE4F5','#F7FBFE'], CLOUD=['#FFFFFF','#F2F8FD'];
+  const GRASS=['#C3DAAC','#8DB277'], ROCK=['#DCD9D2','#ADA89F'];
+  const PINE=['#A3C79B','#5E8A62'], WATER=['#E2F1F4','#AFD0DC'];
+  const STONE=['#EDE7DC','#C0B9AC'];
+  const MEAD=['#D9EAC6','#8FB47A'];
   const PETAL=['#C85FA8','#E083C0','#B14E93','#DDA0CE','#FFFFFF','#A9603F'];
   let W,H,LW,cols,rows,L=[],seed=o.seed||7,mx=.5,my=.5,alive=0,built=false,raf=0;
 
@@ -479,7 +502,7 @@ function alpine(cv,o){
      while(x<cols){
        const h=Math.round(rows*(.06+Math.pow(r(),1.7)*.13)*(1.05-x/cols*.25));
        const lit=r()>.5;
-       tree(x,lakeY+1,h,lit?['#47784A','#1B3521']:PINE);
+       tree(x,lakeY+1,h,lit?['#B2D3A8','#6E9A6E']:PINE);
        x+=3+Math.floor(Math.pow(r(),.8)*8);
      }}
 
@@ -512,9 +535,9 @@ function alpine(cv,o){
      const w0=Math.max(2,Math.round(sh*.26));
      for(let i=0;i<sh;i++){
        const ww=Math.round(w0*Math.pow(i/Math.max(1,sh-1),.8));
-       for(let k=-ww;k<=ww;k++)P(sx+k,sb-sh+i,mix('#3F7046','#10210F',.08+(i/sh)*.5+(k>0?.24:0)));
+       for(let k=-ww;k<=ww;k++)P(sx+k,sb-sh+i,mix('#9FC697','#55805A',.08+(i/sh)*.5+(k>0?.24:0)));
      }
-     for(let j=0;j<Math.round(rows*.05);j++)P(sx,sb+j,'#2A1C12');}
+     for(let j=0;j<Math.round(rows*.05);j++)P(sx,sb+j,'#9A8C76');}
 
     /* 5 — the wildflower bank you are standing in */
     {const P=pen(L[5].x), r=mul(seed*23+13), n=noise(mul(seed+211));
@@ -636,6 +659,63 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
   }),{threshold:.3});
   document.querySelectorAll('[data-vid]').forEach(v=>io.observe(v));
 }
+
+/* ═══ the portrait, sampled into the same grid the landscape uses ═══
+   Five tones, so the wall behind me resolves to white on its own. Where
+   the cursor goes, each cell splits into four and the detail arrives. ═══ */
+function portrait(cv,src,n){
+  const ctx=cv.getContext('2d'), img=new Image();
+  const PAL=['#FFFFFF','#E8EBE3','#A9B4A2','#5C6B55','#232A1E'];
+  const ST=[.745,.585,.425,.245];
+  let CW=0,CH=0,cell=0,co=null,fi=null,mx=-1e4,my=-1e4,raf=0,ready=false;
+  const grid=w=>{
+    const c=document.createElement('canvas');
+    c.width=w;c.height=Math.max(1,Math.round(w*img.height/img.width));
+    const x=c.getContext('2d');x.drawImage(img,0,0,c.width,c.height);
+    let d;try{d=x.getImageData(0,0,c.width,c.height).data}catch(e){return null}
+    const g=new Uint8Array(c.width*c.height);
+    for(let i=0;i<g.length;i++){
+      const v=(d[i*4]*.299+d[i*4+1]*.587+d[i*4+2]*.114)/255;
+      g[i]=v>ST[0]?0:v>ST[1]?1:v>ST[2]?2:v>ST[3]?3:4}
+    return {w:c.width,h:c.height,g}};
+  function build(){
+    CW=cv.clientWidth;if(!CW||!img.width)return false;
+    co=grid(n);fi=grid(n*2);
+    if(!co||!fi){                          /* if pixels can't be read, show the photo plainly */
+      const dpr=Math.min(2,devicePixelRatio||1),hh=Math.round(CW*img.height/img.width);
+      cv.width=CW*dpr;cv.height=hh*dpr;cv.style.height=hh+'px';
+      ctx.setTransform(dpr,0,0,dpr,0,0);ctx.drawImage(img,0,0,CW,hh);co=null;return false}
+    cell=CW/co.w;CH=Math.round(cell*co.h);
+    const dpr=Math.min(2,devicePixelRatio||1);
+    cv.width=CW*dpr;cv.height=CH*dpr;cv.style.height=CH+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);return true}
+  function draw(){
+    if(!co)return;
+    ctx.clearRect(0,0,CW,CH);
+    const R=cell*3.6, h=cell/2;
+    for(let y=0;y<co.h;y++)for(let x=0;x<co.w;x++){
+      const px=x*cell,py=y*cell;
+      if(Math.hypot(px+h-mx,py+h-my)<R){
+        for(let j=0;j<2;j++)for(let i=0;i<2;i++){
+          const fx=x*2+i,fy=y*2+j;
+          if(fx>=fi.w||fy>=fi.h)continue;
+          ctx.fillStyle=PAL[fi.g[fy*fi.w+fx]];
+          ctx.fillRect(px+i*h,py+j*h,h-.5,h-.5)}
+      }else{
+        ctx.fillStyle=PAL[co.g[y*co.w+x]];
+        ctx.fillRect(px,py,cell-1,cell-1)}}}
+  const nudge=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;draw()})};
+  img.onload=()=>{if(build()){ready=true;draw()}};
+  img.src=src;
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    cv.addEventListener('pointermove',e=>{
+      const r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;nudge()});
+    cv.addEventListener('pointerleave',()=>{mx=my=-1e4;nudge()});
+  }
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);
+    rt=setTimeout(()=>{if(ready&&build())draw()},200)});
+}
+portrait(document.getElementById('meC'),'img/me-px.webp',44);
 
 /* ═══ the small residents — a butterfly, a bee, a couple of ladybirds ═══
    They live on their own overlay canvas so the landscape underneath never
