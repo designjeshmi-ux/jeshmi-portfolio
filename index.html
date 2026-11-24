@@ -75,6 +75,8 @@ h1 em{font-style:normal;color:var(--grn)}
 /* ── sections ── */
 section{padding:clamp(70px,11vh,136px) var(--gut) 0}
 .sh{padding-bottom:18px;border-bottom:1px solid var(--hair)}
+.sh .sn{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--grn);font-weight:500;margin-bottom:11px}
 .sh h2{font-size:clamp(23px,2.7vw,34px);letter-spacing:-.034em;font-weight:600;max-width:20ch}
 .sh p{color:var(--mid);font-size:15px;margin-top:7px;max-width:56ch}
 .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1)}
@@ -172,10 +174,25 @@ section{padding:clamp(70px,11vh,136px) var(--gut) 0}
 .cp:hover{background:color-mix(in srgb,var(--ink) 13%,transparent)}
 .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:42px;
   font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
-.meadow{width:100vw;margin-left:calc(50% - 50vw);margin-top:28px}
-.meadow canvas{display:block;width:100%;height:clamp(156px,22vh,240px)}
+/* ── the closing scene: a seeded valley you can move and regrow ── */
+.scene{width:100vw;margin-left:calc(50% - 50vw);margin-top:34px;position:relative}
+.scene canvas{display:block;width:100%;height:clamp(340px,62vh,620px);cursor:crosshair;outline:none}
+.scene canvas:focus-visible{outline:2px solid var(--grn);outline-offset:-4px}
+.scap{position:absolute;left:var(--gut);right:var(--gut);bottom:12px;display:flex;
+  justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;pointer-events:none}
+.scap span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:#1B2317;background:rgba(255,255,255,.78);border-radius:99px;padding:5px 12px;
+  backdrop-filter:blur(6px)}
+@media (max-width:760px){.scap span{display:none}}
+.regrow{pointer-events:auto;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:#1B2317;background:rgba(255,255,255,.82);border:0;
+  border-radius:99px;padding:6px 13px;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s}
+.regrow:hover{background:#fff}
 
 @media (max-width:620px){
+  /* a phone has far fewer columns to draw with, so keep the valley wide, not tall */
+  .scene canvas{height:clamp(230px,36vh,310px)}
+  .scap{left:16px;right:16px}
   /* no dead space above the field on a phone — let it follow the words */
   .hero{min-height:auto}
   .field{margin-top:clamp(44px,9vh,76px)}
@@ -216,6 +233,7 @@ section{padding:clamp(70px,11vh,136px) var(--gut) 0}
 
 <section id="work">
   <div class="sh rv">
+    <span class="sn">01 — Selected work</span>
     <h2>Three problems I couldn't put down</h2>
     <p>Each one started the same way: someone was staring at a screen full of data, trying to work out what to actually do.</p>
   </div>
@@ -280,6 +298,7 @@ section{padding:clamp(70px,11vh,136px) var(--gut) 0}
 
 <section id="about">
   <div class="sh rv">
+    <span class="sn">02 — Method</span>
     <h2>How I work</h2>
     <p>Three things happen before I open Figma, and they're the reason the screens come out simple.</p>
   </div>
@@ -299,7 +318,7 @@ section{padding:clamp(70px,11vh,136px) var(--gut) 0}
 </section>
 
 <section id="path">
-  <div class="sh rv"><h2>How I got here</h2></div>
+  <div class="sh rv"><span class="sn">03 — Path</span><h2>How I got here</h2></div>
   <ul class="xp">
     <li class="rv"><span class="when">Jul 2025 – now<b>Contract</b></span>
       <div><h3>Product &amp; UX designer, with a small design team</h3>
@@ -333,8 +352,9 @@ section{padding:clamp(70px,11vh,136px) var(--gut) 0}
 
 <section id="play">
   <div class="sh rv">
-    <h2>Side quests</h2>
-    <p>Things I make when nobody's asking — usually because something annoyed me enough to redesign it.</p>
+    <span class="sn">04 — Side quests</span>
+    <h2>Things I made when nobody asked</h2>
+    <p>Usually because something annoyed me enough to redesign it, and then I wanted to see if it would actually work.</p>
   </div>
   <div class="sq">
     <a class="qd rv" href="blinkit.html"><span class="im"><img src="img/ck-mock-800.webp" srcset="img/ck-mock-800.webp 800w, img/ck-mock-1600.webp 1600w" sizes="(max-width:880px) 92vw, 31vw" alt="Cook Tonight on Blinkit" loading="lazy" width="1600" height="1000"></span>
@@ -353,6 +373,7 @@ section{padding:clamp(70px,11vh,136px) var(--gut) 0}
 </section>
 
 <footer class="end" id="contact">
+  <span class="sn" style="display:block;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--grn);margin-bottom:14px">05 — Contact</span>
   <span class="k"><i></i>Open to product design roles in Bengaluru</span>
   <h2>Let's ship something. <a href="mailto:design.jeshmi@gmail.com?subject=Hello%20Jeshmi">Say hello →</a></h2>
   <dl class="det">
@@ -362,8 +383,14 @@ section{padding:clamp(70px,11vh,136px) var(--gut) 0}
     <div><dt>Resume</dt><dd><a href="Jeshmi_Hamitkhani_Resume.pdf" target="_blank" rel="noopener">Download PDF ↗</a></dd></div>
   </dl>
   <div class="foot"><span>© 2026 Jeshmi Hamitkhani</span><span>Designed and built by me</span></div>
-  <div class="meadow"><canvas id="meadowC" aria-hidden="true"></canvas></div>
 </footer>
+
+<div class="scene">
+  <canvas id="sceneC" tabindex="0" role="img"
+    aria-label="A seeded pixel landscape: an alpine lake below a rocky ridge, with pine forest and wildflowers. Click or press enter to regrow it."></canvas>
+  <p class="scap"><span>Seeded pixel landscape — no two visits draw the same valley</span>
+    <button class="regrow" type="button" id="regrow">↻ Regrow</button></p>
+</div>
 
 <script>
 /* ═══ one seeded pixel engine — the meadow, drawn at two distances ═══ */
@@ -445,6 +472,193 @@ function meadow(cv,seed,o){
   return {play};
 }
 
+/* ═══ the closing scene — an alpine lake, six seeded depth planes ═══
+   Each plane renders once into its own offscreen canvas, so the cursor
+   parallax is six drawImage calls a frame rather than a full repaint. ═══ */
+function alpine(cv,o){
+  o=o||{};
+  const PX=o.px||5, PAD=46, out=cv.getContext('2d');
+  const SHIFT=[2,5,10,4,16,26];                 /* sky → meadow: nearer moves more */
+  const SKY=['#2F7CC6','#AEDAF2'], CLOUD=['#FFFFFF','#EAF4FC'];
+  const GRASS=['#6E9D4C','#3C6329'], ROCK=['#A7A69B','#5F6058'];
+  const PINE=['#2F5434','#162B1C'], WATER=['#8FD8CE','#1F6B84'];
+  const STONE=['#DCD4C3','#7A7368'];
+  const MEAD=['#A9CC89','#38602A'];
+  const PETAL=['#C85FA8','#E083C0','#B14E93','#DDA0CE','#FFFFFF','#A9603F'];
+  let W,H,LW,cols,rows,L=[],seed=o.seed||7,mx=.5,my=.5,alive=0,built=false,raf=0;
+
+  const mk=()=>{const c=document.createElement('canvas');return c};
+  const pen=x=>(a,b,col)=>{if(a<0||a>=cols||b<0||b>=rows)return;x.fillStyle=col;x.fillRect(a*PX,b*PX,PX-1,PX-1)};
+
+  function build(){
+    W=cv.clientWidth;H=cv.clientHeight;if(!W||!H)return false;
+    const dpr=Math.min(2,devicePixelRatio||1);
+    cv.width=W*dpr;cv.height=H*dpr;out.setTransform(dpr,0,0,dpr,0,0);
+    LW=W+PAD*2;cols=Math.ceil(LW/PX);rows=Math.ceil(H/PX);
+    L=SHIFT.map(()=>{const c=mk();c.width=LW*dpr;c.height=H*dpr;
+      const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);return{c,x}});
+    paint();return true;
+  }
+
+  function paint(){
+    const lakeY=Math.round(rows*.46), shoreY=Math.round(rows*.73), grassY=Math.round(rows*.72);
+
+    /* 0 — sky, deep overhead and washing out toward the ridge line */
+    {const P=pen(L[0].x), r=mul(seed*3+11);
+     for(let y=0;y<lakeY+2;y++){const c=mix(SKY[0],SKY[1],Math.pow(y/(lakeY+2),.72));
+       for(let x=0;x<cols;x++)P(x,y,c)}
+     for(let i=0,n=2+Math.floor(r()*3);i<n;i++){       /* small flat-bottomed clouds, left half */
+       const cx=Math.floor(r()*cols*.6), cy=Math.round(rows*(.06+r()*.14)), w=3+Math.floor(r()*6);
+       for(let k=-w;k<=w;k++){const h=Math.round(Math.sqrt(Math.max(0,w*w-k*k))*.34);
+         for(let j=0;j<=h;j++)P(cx+k,cy-j,j>h-1&&r()>.6?CLOUD[1]:CLOUD[0])}}}
+
+    /* 1 — the ridge: grass on the shoulders, rock in the cliffs, peak running off frame */
+    {const P=pen(L[1].x), n=noise(mul(seed+41)), n2=noise(mul(seed+91)), r=mul(seed+7);
+     for(let x=0;x<cols;x++){
+       const t=x/cols;
+       const rise=rows*(.13+.64*Math.pow(t,2.4))+fbm(n,x/19,4)*rows*.09;
+       const top=Math.max(-1,Math.round(lakeY-rise));
+       const band=.28+fbm(n2,x/5,4)*.36;              /* grass shoulder before the cliffs */
+       const foot=.80+fbm(n2,x/4+40,3)*.16;             /* grass again on the lower slope */
+       for(let y=Math.max(0,top);y<lakeY;y++){
+         const d=(y-top)/Math.max(1,lakeY-top);
+         let c;
+         if(d<band) c=mix(GRASS[0],GRASS[1],.12+d/Math.max(.01,band)*.78);
+         else if(d>foot) c=mix(GRASS[0],GRASS[1],.6+(d-foot)*2);
+         else{const k=(d-band)/Math.max(.01,foot-band);
+           c=mix(ROCK[0],ROCK[1],.06+k*.6+(Math.floor(y/2)%2)*.1);
+           if(r()<.09)c=mix(c,GRASS[1],.62)}           /* grass clinging to the rock */
+         if(y===top)c=mix(c,'#FFFFFF',.34);
+         P(x,y,c)}}}
+
+    /* 2 — the pine belt on the far bank: spaced trees, not a wall */
+    {const P=pen(L[2].x), r=mul(seed*5+3);
+     const tree=(cx,base,h,pal)=>{
+       const w=Math.max(1,Math.round(h*.23));
+       for(let i=0;i<h;i++){
+         const ww=Math.round(w*Math.pow(i/Math.max(1,h-1),.82));
+         for(let k=-ww;k<=ww;k++)
+           P(cx+k,base-h+i,mix(pal[0],pal[1],.06+(i/h)*.6+(k>0?.26:0)));
+       }
+       P(cx,base,pal[1]);P(cx,base+1,pal[1]);
+     };
+     let x=-3;
+     while(x<cols){
+       const h=Math.round(rows*(.06+Math.pow(r(),1.7)*.13)*(1.05-x/cols*.25));
+       const lit=r()>.5;
+       tree(x,lakeY+1,h,lit?['#47784A','#1B3521']:PINE);
+       x+=3+Math.floor(Math.pow(r(),.8)*8);
+     }}
+
+    /* 3 — the lake: dark teal at the far bank, pale turquoise over the near shallows */
+    {const P=pen(L[3].x), r=mul(seed*11+5);
+     for(let y=lakeY;y<shoreY+1;y++){
+       const d=(y-lakeY)/Math.max(1,shoreY-lakeY);
+       const c=mix(WATER[1],WATER[0],Math.pow(d,1.25));
+       for(let x=0;x<cols;x++)P(x,y,c);
+     }
+     for(let i=0,n=Math.round(cols*.26);i<n;i++){       /* horizontal shimmer, strongest mid-water */
+       const d=r(), y=lakeY+Math.floor(d*(shoreY-lakeY));
+       const x0=Math.floor(r()*cols), w=2+Math.floor(r()*11);
+       const lift=.10+Math.max(0,1-Math.abs(d-.45)*2)*.2;
+       for(let x=x0;x<x0+w;x++)P(x,y,mix(mix(WATER[1],WATER[0],Math.pow(d,1.25)),'#FFFFFF',Math.max(.12,lift)));
+     }}
+
+    /* 4 — the stony near shore, and the one big spruce standing in front of the water */
+    {const P=pen(L[4].x), r=mul(seed*17+9), n=noise(mul(seed+131));
+     const reach=Math.round(cols*.34);
+     for(let x=0;x<reach;x++){
+       const fall=1-x/reach;
+       const top=shoreY-Math.round(fbm(n,x/8,3)*rows*.10*fall)-Math.round(rows*.03*fall);
+       for(let y=top;y<grassY+2;y++){
+         if(r()<.18)continue;
+         let c=mix(STONE[0],STONE[1],.08+r()*.88);
+         if(r()<.1)c=mix(c,'#FFFFFF',.3);
+         P(x,y,c)}}
+     const sx=Math.round(cols*.87), sb=Math.round(rows*.84), sh=Math.round(rows*.44);
+     const w0=Math.max(2,Math.round(sh*.26));
+     for(let i=0;i<sh;i++){
+       const ww=Math.round(w0*Math.pow(i/Math.max(1,sh-1),.8));
+       for(let k=-ww;k<=ww;k++)P(sx+k,sb-sh+i,mix('#3F7046','#10210F',.08+(i/sh)*.5+(k>0?.24:0)));
+     }
+     for(let j=0;j<Math.round(rows*.05);j++)P(sx,sb+j,'#2A1C12');}
+
+    /* 5 — the wildflower bank you are standing in */
+    {const P=pen(L[5].x), r=mul(seed*23+13), n=noise(mul(seed+211));
+     const lip=x=>grassY-Math.round(fbm(n,x/11,3)*rows*.07);
+     for(let x=0;x<cols;x++){
+       const top=lip(x);
+       for(let y=top;y<rows;y++){
+         const k=(y-top)/Math.max(1,rows-top);
+         let c=mix(MEAD[0],MEAD[1],Math.min(1,.16+k*.95));
+         if(r()<.06)c=mix(c,'#FFFFFF',.13);
+         P(x,y,c)}}
+     /* broad leaves down at the front, the way the bank reads up close */
+     for(let i=0,nl=Math.round(cols*.5);i<nl;i++){
+       const cx=Math.floor(r()*cols), cy=rows-Math.floor(Math.pow(r(),1.4)*(rows-grassY)*.9);
+       const w=1+Math.floor(r()*3), c=mix(MEAD[1],MEAD[0],.1+r()*.35);
+       for(let k=-w;k<=w;k++)for(let j=-1;j<=1;j++){
+         if(Math.abs(k)===w&&j!==0)continue;P(cx+k,cy+j,c)}}
+     /* and the flowers themselves, scattered through the whole bank */
+     const nf=Math.round(cols*2.4);
+     for(let i=0;i<nf;i++){
+       const cx=Math.floor(r()*cols), top=lip(cx);
+       const depth=Math.pow(r(),.75);                   /* 0 at the lip, 1 at your feet */
+       const cy=top-3+Math.round(depth*(rows-top)*.92);
+       const pc=PETAL[Math.floor(r()*PETAL.length)];
+       const stem=mix(MEAD[1],MEAD[0],.2+r()*.2);
+       for(let s=cy+1;s<cy+3+Math.floor(depth*5);s++)P(cx,s,stem);
+       if(pc==='#A9603F'){                              /* rusty dock spike */
+         for(let j=0;j<4+Math.floor(r()*5);j++){P(cx,cy-j,pc);
+           if(r()>.55)P(cx+(r()>.5?1:-1),cy-j,mix(pc,'#000000',.22))}
+         continue}
+       P(cx,cy,pc);P(cx-1,cy,pc);P(cx+1,cy,pc);P(cx,cy-1,pc);
+       if(depth>.45){                                   /* fuller heads up close */
+         P(cx-1,cy-1,pc);P(cx+1,cy-1,pc);P(cx,cy+1,pc);
+         P(cx-2,cy,mix(pc,'#FFFFFF',.22));P(cx+2,cy,mix(pc,'#FFFFFF',.22));
+         P(cx,cy-2,mix(pc,'#FFFFFF',.28))}
+     }}
+  }
+
+  function composite(){
+    out.clearRect(0,0,W,H);
+    const lean=(.5-mx)*2;
+    for(let i=0;i<L.length;i++){
+      const a=Math.max(0,Math.min(1,alive-i));
+      if(a<=0)break;
+      out.globalAlpha=a;
+      out.drawImage(L[i].c,-PAD+lean*SHIFT[i],0,LW,H);
+    }
+    out.globalAlpha=1;
+  }
+
+  function reveal(){
+    const quick=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(quick){alive=L.length;composite();return}
+    alive=0;const t0=performance.now();
+    const step=now=>{alive=Math.min(L.length,(now-t0)/150);composite();
+      if(alive<L.length)requestAnimationFrame(step)};
+    requestAnimationFrame(step);
+  }
+
+  function start(){if(built||!build())return;built=true;reveal()}
+  function regrow(){seed=Math.floor(Math.random()*1e6);if(!built){start();return}paint();reveal()}
+
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    cv.addEventListener('pointermove',e=>{
+      const b=cv.getBoundingClientRect();
+      mx=(e.clientX-b.left)/b.width;my=(e.clientY-b.top)/b.height;
+      if(!raf)raf=requestAnimationFrame(()=>{raf=0;if(built&&alive>=L.length)composite()});
+    });
+    cv.addEventListener('pointerleave',()=>{mx=.5;if(built&&alive>=L.length)composite()});
+  }
+  cv.addEventListener('click',regrow);
+  cv.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();regrow()}});
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);
+    rt=setTimeout(()=>{if(built&&build())composite()},200)});
+  return {start,regrow};
+}
+
 /* ── wire it up ── */
 (function(){  /* nav mark: a single pixel daisy from the field */
   const cv=document.getElementById('mk');if(!cv)return;
@@ -459,11 +673,13 @@ function meadow(cv,seed,o){
   put(2,6,'#6E9B4C');
 })();
 
-/* the hero field is the same meadow seen from further off; the footer is up close */
+/* the hero opens on a strip of meadow; the page closes on the whole valley */
 const fieldM=meadow(document.getElementById('fieldC'),77,{dens:.52,big:false,px:5});
-const footM=meadow(document.getElementById('meadowC'),318,{dens:.78,big:true,px:6});
-new IntersectionObserver((es,ob)=>es.forEach(e=>{if(e.isIntersecting){footM.play();ob.disconnect()}}),{threshold:.15})
-  .observe(document.getElementById('meadowC'));
+const sceneC=document.getElementById('sceneC');
+const valley=alpine(sceneC,{seed:412,px:innerWidth<620?3:4});
+new IntersectionObserver((es,ob)=>es.forEach(e=>{if(e.isIntersecting){valley.start();ob.disconnect()}}),{threshold:.12})
+  .observe(sceneC);
+document.getElementById('regrow').addEventListener('click',e=>{e.stopPropagation();valley.regrow()});
 
 requestAnimationFrame(()=>{document.body.classList.add('go');setTimeout(()=>fieldM.play(),240)});
 
