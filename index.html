@@ -171,6 +171,11 @@ section{padding:clamp(66px,10vh,124px) 0 0}
   text-transform:uppercase;color:#0B0B0B;background:rgba(255,255,255,.86);border:0;
   border-radius:99px;padding:6px 13px;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s}
 .regrow:hover{background:#fff}
+.field{position:relative}
+canvas.bugs{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;cursor:default}
+/* over the hero strip they get the white air above the field to fly in */
+.field canvas.bugs{top:-150px;height:calc(100% + 150px)}
+@media (max-width:640px){.field canvas.bugs{top:-96px;height:calc(100% + 96px)}}
 
 @media (max-width:640px){
   .scene canvas{height:clamp(230px,36vh,310px)}
@@ -202,7 +207,7 @@ section{padding:clamp(66px,10vh,124px) 0 0}
   </div>
   <span class="open"><i></i>Open to product design roles — can join immediately</span>
 </header>
-<div class="field"><canvas id="fieldC" aria-hidden="true"></canvas></div>
+<div class="field"><canvas id="fieldC" aria-hidden="true"></canvas><canvas class="bugs" id="bugH" aria-hidden="true"></canvas></div>
 
 <section id="work" class="wrap">
   <div class="sh rv"><h2>Selected work</h2><span class="lbl">One shipped · two concepts</span></div>
@@ -315,6 +320,7 @@ section{padding:clamp(66px,10vh,124px) 0 0}
 <div class="scene">
   <canvas id="sceneC" tabindex="0" role="img"
     aria-label="A seeded pixel landscape: an alpine lake below a rocky ridge, with pine forest and wildflowers. Click or press enter to regrow it."></canvas>
+  <canvas class="bugs" id="bugV" aria-hidden="true"></canvas>
   <p class="scap"><span>Seeded pixel landscape — no two visits draw the same valley</span>
     <button class="regrow" type="button" id="regrow">↻ Regrow</button></p>
 </div>
@@ -630,6 +636,90 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
   }),{threshold:.3});
   document.querySelectorAll('[data-vid]').forEach(v=>io.observe(v));
 }
+
+/* ═══ the small residents — a butterfly, a bee, a couple of ladybirds ═══
+   They live on their own overlay canvas so the landscape underneath never
+   repaints. They keep out of the cursor's way, and scatter when you click. */
+function critters(cv,o){
+  const ctx=cv.getContext('2d'), PX=o.px||3;
+  const PAL={Y:'#F3C53F',T:'#6B4A18',K:'#201F1C',R:'#D63B2A',W:'rgba(255,255,255,.7)'};
+  const S={
+    fly:[['.TYY.YYT.','TYYYTYYYT','YYYYTYYYY','.YYYTYYY.','..YYTYY..','...TYT...'],
+         ['....T....','..YYTYY..','.YYYTYYY.','.YYYTYYY.','..YYTYY..','...TYT...']],
+    bee:[['.W.....W.','WWYKYKYWW','.YKYKYKY.','..KYKYK..','...KKK...'],
+         ['..W...W..','.WYKYKYW.','.YKYKYKY.','..KYKYK..','...KKK...']],
+    bug:[['..RRR..','.RRKRR.','RRKRRKK','.RRKRR.','..RRR..']]
+  };
+  let W=0,H=0,bugs=[],mx=-1e4,my=-1e4,raf=0,last=0,on=false;
+  const put=(g,x,y,flip)=>{
+    for(let r=0;r<g.length;r++){const row=g[r];
+      for(let c=0;c<row.length;c++){const ch=row[c];if(ch==='.')continue;
+        const col=PAL[ch];if(!col)continue;
+        const dx=flip?row.length-1-c:c;
+        ctx.fillStyle=col;ctx.fillRect(Math.round(x)+dx*PX,Math.round(y)+r*PX,PX,PX)}}};
+  function size(){
+    const dpr=Math.min(2,devicePixelRatio||1);
+    W=cv.clientWidth;H=cv.clientHeight;if(!W||!H)return false;
+    cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);return true}
+  function seed(){
+    const R=Math.random;
+    bugs=[{k:'fly',x:W*.18,y:H*.3,vx:.52,ph:R()*6,fr:0,lf:0},
+          {k:'bee',x:W*.72,y:H*.66,vx:-.42,ph:R()*6,fr:0,lf:0}];
+    if(o.ground)for(let i=0;i<2;i++)
+      bugs.push({k:'bug',x:W*(.3+i*.42),y:H*(.9+i*.05),vx:i?-.15:.19,fr:0,lf:0});
+  }
+  function frame(now){
+    const dt=Math.min(42,now-last||16);last=now;
+    ctx.clearRect(0,0,W,H);
+    for(const b of bugs){
+      if(b.k==='bug'){
+        b.x+=b.vx*dt/16;
+        if(b.x<2||b.x>W-22)b.vx*=-1;
+        const d=Math.hypot(mx-b.x,my-b.y);
+        if(d<64){b.vx=b.x>mx?Math.abs(b.vx):-Math.abs(b.vx);b.x+=b.vx*dt/16*1.7}
+      }else{
+        const bee=b.k==='bee';
+        b.ph+=dt/(bee?240:430);
+        b.x+=b.vx*dt/16;
+        b.y+=Math.sin(b.ph)*(bee?.95:.7);
+        const d=Math.hypot(mx-b.x,my-b.y);
+        if(d<120){const a=Math.atan2(b.y-my,b.x-mx);
+          b.x+=Math.cos(a)*2.3;b.y+=Math.sin(a)*2.3;
+          b.vx=Math.cos(a)*Math.max(.62,Math.abs(b.vx))}
+        if(b.x<-64)b.x=W+18;if(b.x>W+64)b.x=-18;
+        b.y=Math.max(H*(bee?.34:.06),Math.min(H*(bee?.9:.7),b.y));
+        if(now-b.lf>(bee?66:160)){b.fr^=1;b.lf=now}
+      }
+      put(S[b.k][b.k==='bug'?0:b.fr],b.x,b.y,b.vx<0);
+    }
+    raf=requestAnimationFrame(frame);
+  }
+  function start(){
+    if(on||!size())return;on=true;seed();
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+      ctx.clearRect(0,0,W,H);
+      for(const b of bugs)put(S[b.k][0],b.x,b.y,b.vx<0);return}
+    last=performance.now();raf=requestAnimationFrame(frame);
+  }
+  function stop(){if(raf)cancelAnimationFrame(raf);raf=0;on=false}
+  addEventListener('pointermove',e=>{
+    const r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});
+  addEventListener('click',e=>{
+    const r=cv.getBoundingClientRect();
+    if(e.clientY<r.top||e.clientY>r.bottom)return;
+    const px=e.clientX-r.left,py=e.clientY-r.top;
+    for(const b of bugs){const a=Math.atan2(b.y-py,b.x-px)||0;
+      b.x+=Math.cos(a)*26;b.y+=Math.sin(a)*14;
+      if(b.k!=='bug')b.vx=Math.cos(a)*1.25}});
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);
+    rt=setTimeout(()=>{if(on){stop();start()}},220)});
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting)start();else if(on&&raf){cancelAnimationFrame(raf);raf=0;on=false}
+  }),{threshold:0}).observe(cv);
+  return {start};
+}
+critters(document.getElementById('bugH'),{px:5});
+critters(document.getElementById('bugV'),{px:6,ground:true});
 
 /* copy email */
 document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',e=>{
