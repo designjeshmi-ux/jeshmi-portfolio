@@ -904,4 +904,18 @@ document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',e
   const l=b.querySelector('[data-copy-label]');if(!l)return;
   l.textContent='Copied';setTimeout(()=>l.textContent='Copy',2000);
 }));
+
+/* Wake the RetailPilot API the moment someone shows interest, so the demo is
+   warm by the time they click. Render's free tier sleeps and takes ~45s cold. */
+(function(){
+  var API='https://retailpilot-api-du7c.onrender.com/health', done=false;
+  function warm(){ if(done)return; done=true;
+    try{ fetch(API,{mode:'no-cors',cache:'no-store'}).catch(function(){}); }catch(e){} }
+  var card=document.querySelector('a[href="rp.html"], a[href*="retailpilot-tau"]');
+  if(card){
+    card.addEventListener('pointerenter',warm,{once:true});
+    new IntersectionObserver(function(es,ob){es.forEach(function(e){
+      if(e.isIntersecting){warm();ob.disconnect()}})},{threshold:.4}).observe(card);
+  } else { addEventListener('load',warm); }
+})();
 </script>
